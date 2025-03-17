@@ -1,8 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# 设置GIT_DIR环境变量指向父级目录的.git
-export GIT_DIR=../.git
-
 # 原有的lint-staged命令
 npx lint-staged

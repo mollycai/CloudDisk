@@ -1,0 +1,142 @@
+@primary-color: #4d6bfe; // 主题色
+@form-width: 460px;
+@form-padding: 36px;
+@border-radius: 10px;
+@box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 500px;
+  background-image: url('@/assets/login_bg.svg');
+  background-size: cover;
+  background-position: center;
+  background-color: #eee !important;
+
+  .login-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 96%;
+    height: 94%;
+    padding: 0 20px;
+    border-radius: @border-radius;
+    background-color: rgba(255, 255, 255, 0.7);
+
+    .login-left {
+      width: 750px;
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .login-right {
+      position: relative;
+      width: 100%;
+      max-width: @form-width;
+
+      .login-form,
+      .register-form {
+        padding: @form-padding;
+        border-radius: @border-radius;
+        background-color: transparent !important;
+        box-shadow: @box-shadow !important;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+
+        &.active {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        &.inactive {
+          opacity: 0;
+          transform: translateX(100%);
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+        }
+
+        .logo {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 30px;
+
+          .icon {
+            width: 70px;
+          }
+
+          .logo-text,
+          .register-text {
+            padding-left: 25px;
+            font-size: 36px;
+            font-weight: bold;
+          }
+        }
+
+        .ant-form-item {
+          margin-bottom: 16px;
+
+          .ant-input {
+            border-radius: 4px;
+            padding: 5px 12px;
+            font-size: 14px;
+
+            &:focus {
+              border-color: @primary-color;
+              box-shadow: 0 0 0 2px rgba(77, 107, 254, 0.2);
+            }
+          }
+
+          .ant-input-prefix {
+            color: rgba(0, 0, 0, 0.25);
+          }
+        }
+
+        .login-btn,
+        .register-btn {
+          width: 100%;
+          background-color: @primary-color;
+          border-color: @primary-color;
+          font-size: 16px;
+          font-weight: 500;
+          height: 40px;
+          border-radius: 4px;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: darken(@primary-color, 10%);
+            border-color: darken(@primary-color, 10%);
+          }
+
+          &:active {
+            background-color: darken(@primary-color, 20%);
+            border-color: darken(@primary-color, 20%);
+          }
+        }
+      }
+
+      .goto-login,
+      .goto-register {
+        width: 100%;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 14px;
+
+        .link {
+          color: @primary-color;
+          text-decoration: none;
+
+          &:hover {
+            color: darken(@primary-color, 10%);
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}

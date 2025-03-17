@@ -1,12 +1,24 @@
-import { StrictMode } from 'react';
-
+// import { Provider } from "react-redux";
+// import { persistor, store } from '@/redux';
+// import { PersistGate } from "redux-persist/integration/react";
+import { ConfigProvider } from 'antd';
 import { createRoot } from 'react-dom/client';
 
 import App from './App.tsx';
-import './main.css';
+import "./styles/index.less"
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+  // <Provider store={store}>
+  //   <PersistGate persistor={persistor}>
+  <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: '#4d6bfe', // 修改主题色
+      },
+    }}
+  >
     <App />
-  </StrictMode>,
+  </ConfigProvider>,
+  //   </PersistGate>
+  // </Provider>
 );
