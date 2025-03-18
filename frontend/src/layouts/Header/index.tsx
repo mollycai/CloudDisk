@@ -1,14 +1,14 @@
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, theme } from "antd";
-import { Header } from "antd/es/layout/layout";
-import { useState } from "react";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { Button, theme } from 'antd';
+import { Header } from 'antd/es/layout/layout';
+import { useState } from 'react';
 
 const LayoutHeader = () => {
-	const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-	
+
   return (
     <Header style={{ padding: 0, background: colorBgContainer }}>
       <Button

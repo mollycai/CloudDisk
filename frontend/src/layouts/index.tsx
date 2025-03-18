@@ -1,10 +1,10 @@
+import { Layout, theme } from 'antd';
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Layout, theme } from 'antd';
 import LayoutFooter from './Footer';
-import LayoutMenus from './Menus';
 import LayoutHeader from './Header';
 import Logo from './Logo';
+import LayoutMenus from './Menus';
 
 const { Sider, Content } = Layout;
 
@@ -17,11 +17,11 @@ const AppLayout: React.FC = () => {
   return (
     <Layout className="h-full">
       <Sider trigger={null} collapsible collapsed={collapsed} theme="dark">
-				<Logo/>
+        <Logo />
         <LayoutMenus />
       </Sider>
       <Layout>
-				<LayoutHeader/>
+        <LayoutHeader />
         <Content
           style={{
             margin: '24px 16px 0px',
@@ -33,7 +33,7 @@ const AppLayout: React.FC = () => {
         >
           <Outlet />
         </Content>
-        <LayoutFooter/>
+        <LayoutFooter />
       </Layout>
     </Layout>
   );
