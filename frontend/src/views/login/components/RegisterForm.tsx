@@ -1,6 +1,7 @@
+import { useState } from 'react';
+
 import { LockOutlined, MailOutlined, PhoneOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
-import { useState } from 'react';
 
 const RegisterForm = () => {
   const [form] = Form.useForm();

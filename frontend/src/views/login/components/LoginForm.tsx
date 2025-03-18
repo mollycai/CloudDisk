@@ -2,6 +2,8 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 
 const LoginForm = () => {
+  const [form] = Form.useForm();
+
   const onFinish = (values: any) => {
     console.log('Received values:', values);
     // 这里可以添加登录逻辑，比如调用 API
@@ -14,7 +16,13 @@ const LoginForm = () => {
   };
 
   return (
-    <Form name="login-form" initialValues={{ remember: true }} onFinish={onFinish} onFinishFailed={onFinishFailed}>
+    <Form
+      form={form}
+      name="login-form"
+      initialValues={{ remember: true }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+    >
       {/* 用户名输入框 */}
       <Form.Item
         name="username"

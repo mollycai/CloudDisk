@@ -1,11 +1,13 @@
 import { useState } from 'react';
+
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
+
 import loginImg from '@/assets/login_image.png';
 import './index.less';
-import LoginForm from './components/loginForm';
-import RegisterForm from './components/registerForm';
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(true); // 默认显示登录表单
+  const [isLogin, setIsLogin] = useState<boolean>(true); // 默认显示登录表单
 
   // 切换表单
   const toggleForm = () => {

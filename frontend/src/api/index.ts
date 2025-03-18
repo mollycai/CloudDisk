@@ -1,6 +1,8 @@
-import NProgress from '@/config/nprogress';
 import Axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+
 import { RequestMethods } from './types';
+
+import NProgress from '@/config/nprogress';
 
 // 默认配置
 const defaultConfig = {
