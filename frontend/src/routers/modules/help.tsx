@@ -9,7 +9,7 @@ const helpRouter: Array<RouteObject> = [
     path: '/help',
     element: lazyLoad(React.lazy(() => import('@/views/main/help/index'))),
     meta: {
-      title: '文件分类页面',
+      title: '帮助',
       key: 'help',
       rank: 6,
     },

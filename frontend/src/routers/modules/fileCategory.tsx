@@ -9,7 +9,7 @@ const fileCategoryRouter: Array<RouteObject> = [
     path: '/fileCategory',
     element: lazyLoad(React.lazy(() => import('@/views/main/fileCategory/index'))),
     meta: {
-      title: '文件分类页面',
+      title: '文件分类',
       key: 'fileCategory',
       rank: 5,
     },

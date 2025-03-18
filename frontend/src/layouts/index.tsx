@@ -1,63 +1,27 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { Layout, theme } from 'antd';
+import LayoutFooter from './Footer';
+import LayoutMenus from './Menus';
+import LayoutHeader from './Header';
+import Logo from './Logo';
 
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
-
-const { Header, Sider, Content, Footer } = Layout;
+const { Sider, Content } = Layout;
 
 const AppLayout: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   return (
     <Layout className="h-full">
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
-            },
-          ]}
-        />
+      <Sider trigger={null} collapsible collapsed={collapsed} theme="dark">
+				<Logo/>
+        <LayoutMenus />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
+				<LayoutHeader/>
         <Content
           style={{
             margin: '24px 16px 0px',
@@ -69,7 +33,7 @@ const AppLayout: React.FC = () => {
         >
           <Outlet />
         </Content>
-        <Footer className="text-center">Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
+        <LayoutFooter/>
       </Layout>
     </Layout>
   );
