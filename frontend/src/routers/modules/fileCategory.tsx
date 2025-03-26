@@ -11,7 +11,7 @@ const fileCategoryRouter: Array<RouteObject> = [
     meta: {
       title: '文件分类',
       key: 'fileCategory',
-      rank: 5,
+      rank: 4,
     },
   },
 ];

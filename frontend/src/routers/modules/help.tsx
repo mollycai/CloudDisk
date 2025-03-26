@@ -11,7 +11,7 @@ const helpRouter: Array<RouteObject> = [
     meta: {
       title: '帮助',
       key: 'help',
-      rank: 6,
+      rank: 5,
     },
   },
 ];

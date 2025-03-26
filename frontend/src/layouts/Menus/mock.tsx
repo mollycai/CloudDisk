@@ -1,9 +1,8 @@
 import {
   DashboardOutlined,
-  DatabaseOutlined,
+  FolderOpenOutlined,
   HomeOutlined,
-  ProfileOutlined,
-  RocketOutlined,
+  ProductOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
 
@@ -23,17 +22,12 @@ const menuItems: MenuItem[] = [
   {
     key: '/allFiles',
     label: '所有文件',
-    icon: <DatabaseOutlined />,
+    icon: <FolderOpenOutlined />,
   },
   {
     key: '/fileCategory',
     label: '文件分类',
-    icon: <ProfileOutlined />,
-  },
-  {
-    key: '/uploadFile',
-    label: '上传文件',
-    icon: <RocketOutlined />,
+    icon: <ProductOutlined />,
   },
   {
     key: '/help',
