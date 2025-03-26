@@ -6,6 +6,7 @@ import {
   RocketOutlined,
   SmileOutlined,
 } from '@ant-design/icons';
+
 import { MenuItem } from './types';
 
 const menuItems: MenuItem[] = [

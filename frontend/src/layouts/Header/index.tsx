@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, theme } from 'antd';
 import { Header } from 'antd/es/layout/layout';
-import { useState } from 'react';
+
+import LayoutBreadcrumb from './components/breadcrumb';
 
 const LayoutHeader = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -10,7 +13,7 @@ const LayoutHeader = () => {
   } = theme.useToken();
 
   return (
-    <Header style={{ padding: 0, background: colorBgContainer }}>
+    <Header style={{ padding: 0, background: colorBgContainer }} className="flex">
       <Button
         type="text"
         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -21,6 +24,7 @@ const LayoutHeader = () => {
           height: 64,
         }}
       />
+      <LayoutBreadcrumb></LayoutBreadcrumb>
     </Header>
   );
 };
