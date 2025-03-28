@@ -1,10 +1,21 @@
 package main
 
-import "cdserver/config"
+import (
+	"cdserver/config"
+	"cdserver/routes"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 
-	// Initialize Database
+	router := gin.Default()
+
+	// initialize database
 	config.InitDB()
-	
+
+	routes.SetupRoutes(router)
+
+	router.Run(":8080")
+
 }
