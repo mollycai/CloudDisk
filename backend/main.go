@@ -4,7 +4,7 @@ import "cdserver/config"
 
 func main() {
 
-	//
+	// Initialize Database
 	config.InitDB()
-
+	
 }
