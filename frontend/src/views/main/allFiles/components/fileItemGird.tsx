@@ -1,18 +1,20 @@
 import { getFileIconName } from '@/utils/mapIcon';
 import { MoreOutlined } from '@ant-design/icons';
 import { Checkbox, Dropdown } from 'antd';
-import { useState } from 'react';
-import { dropdownMenu } from './dropdownMenu';
+import { useMemo, useState } from 'react';
 import { FileItemProps } from '../types';
+import { dropdownMenu } from './dropdownMenu';
 
 // 动态导入所有图标文件
 const iconModules = import.meta.glob('@/assets/fileIcon/*.png', { eager: true });
 
 const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, isSelected = false, onSelect }) => {
-  // 获取图标URL
-  const iconName = getFileIconName(fileName);
-  const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
-  const iconUrl = (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
+  // 获取图标URL，使用useMemo缓存图标URL，避免每次渲染都重新计算
+  const iconName = useMemo(() => getFileIconName(fileName), [fileName]);
+  const iconUrl = useMemo(() => {
+    const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
+    return (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
+  }, [iconName]);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -40,7 +42,7 @@ const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, is
       )}
 
       {/* 右上角下拉菜单 - 悬停时显示 */}
-      {isHovered && (
+      {isHovered && iconName !== 'folder.png' && (
         <div className="absolute right-2 top-2 z-10" onClick={(e) => e.stopPropagation()}>
           <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
             <MoreOutlined className="text-gray-500 hover:text-gray-700" onClick={(e) => e.stopPropagation()} />
@@ -48,7 +50,7 @@ const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, is
         </div>
       )}
 
-      {/* 文件图标 - 增大尺寸 */}
+      {/* 文件图标 */}
       <div className="mb-2 flex h-20 w-20 items-center justify-center">
         <img src={iconUrl} alt={fileName} className="h-full w-full object-contain" />
       </div>

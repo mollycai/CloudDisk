@@ -1,33 +1,32 @@
 import { FileAddOutlined, FolderAddOutlined, FolderOutlined, PlusOutlined } from '@ant-design/icons';
-import { Dropdown, MenuProps, message } from 'antd';
+import { Dropdown, MenuProps } from 'antd';
+import { AddButtonProps } from '../types';
 
-const onClick: MenuProps['onClick'] = ({ key }) => {
-  message.info(`Click on item ${key}`);
-};
+const AddButton: React.FC<AddButtonProps> = ({ onOpenFolderModal, onOpenUploadModal }) => {
+  const items: MenuProps['items'] = [
+    {
+      label: '新建文件夹',
+      key: '1',
+      icon: <FolderOutlined />,
+      onClick: onOpenFolderModal,
+    },
+    {
+      label: '上传文件夹',
+      key: '2',
+      icon: <FolderAddOutlined />,
+    },
+    {
+      label: '上传文件',
+      key: '3',
+      icon: <FileAddOutlined />,
+      onClick: onOpenUploadModal,
+    },
+  ];
 
-const items: MenuProps['items'] = [
-  {
-    label: '新建文件夹',
-    key: '1',
-		icon: <FolderOutlined />
-  },
-  {
-    label: '上传文件夹',
-    key: '2',
-		icon: <FolderAddOutlined />
-  },
-  {
-    label: '上传文件',
-    key: '3',
-		icon: <FileAddOutlined />
-  },
-];
-
-const AddButton: React.FC = () => {
   return (
-    <Dropdown menu={{ items, onClick }} trigger={['click']} placement="topRight">
-      <div className='upload-button'>
-				<PlusOutlined />
+    <Dropdown menu={{ items }} trigger={['click']} placement="topRight">
+      <div className="upload-button">
+        <PlusOutlined />
       </div>
     </Dropdown>
   );

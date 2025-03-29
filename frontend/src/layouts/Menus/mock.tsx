@@ -1,10 +1,4 @@
-import {
-  DashboardOutlined,
-  FolderOpenOutlined,
-  HomeOutlined,
-  ProductOutlined,
-  SmileOutlined,
-} from '@ant-design/icons';
+import { DashboardOutlined, FolderOpenOutlined, HomeOutlined, ProductOutlined, SmileOutlined } from '@ant-design/icons';
 
 import { MenuItem } from './types';
 

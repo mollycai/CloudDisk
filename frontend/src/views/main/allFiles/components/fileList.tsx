@@ -4,6 +4,7 @@ import FileItemGird from './fileItemGird';
 import FileItemList from './fileItemList';
 
 const mockFiles = [
+  { id: 0, fileName: '新建文件夹', fileTime: '2023-06-12', size: '2.4 MB' },
   { id: 1, fileName: '文档.docx', fileTime: '2023-06-15', size: '2.4 MB' },
   { id: 2, fileName: '数据.xlsx', fileTime: '2023-06-14', size: '2.4 MB' },
   { id: 3, fileName: '图片.jpg', fileTime: '2023-06-13', size: '2.4 MB' },
@@ -65,7 +66,7 @@ const FileList: React.FC = () => {
       {/* 控制按钮栏 */}
       <FileControlBar
         selectedFiles={selectedFiles}
-				allFiles={files}
+        allFiles={files}
         onSelectAll={handleSelectAll}
         onSortChange={handleSortChange}
         onViewChange={handleViewChange}

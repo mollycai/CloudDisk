@@ -1,7 +1,7 @@
 import { getFileIconName } from '@/utils/mapIcon';
 import { MoreOutlined } from '@ant-design/icons';
 import { Checkbox, Dropdown } from 'antd';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FileItemProps } from '../types';
 import { dropdownMenu } from './dropdownMenu';
 
@@ -16,10 +16,12 @@ const FileItemList: React.FC<FileItemProps> = ({
   isSelected = false,
   onSelect,
 }) => {
-  // 获取图标URL
-  const iconName = getFileIconName(fileName);
-  const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
-  const iconUrl = (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
+  // 获取图标URL，使用useMemo缓存图标URL，避免每次渲染都重新计算
+  const iconName = useMemo(() => getFileIconName(fileName), [fileName]);
+  const iconUrl = useMemo(() => {
+    const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
+    return (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
+  }, [iconName]);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -33,7 +35,7 @@ const FileItemList: React.FC<FileItemProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {(isHovered || isSelected) ? (
+      {isHovered || isSelected ? (
         <div className="w-12" onClick={(e) => e.stopPropagation()}>
           <Checkbox
             checked={isSelected}
@@ -43,9 +45,9 @@ const FileItemList: React.FC<FileItemProps> = ({
             }}
           />
         </div>
-      ): (
-				<div className="w-12"/>
-			)}
+      ) : (
+        <div className="w-12" />
+      )}
 
       {/* 文件图标和名称 */}
       <div className="flex min-w-0 flex-1 items-center">
@@ -61,7 +63,7 @@ const FileItemList: React.FC<FileItemProps> = ({
 
       {/* 操作按钮 */}
 
-      {isHovered || isSelected ? (
+      {isHovered && iconName !== 'folder.png' ? (
         <div className="w-12 text-right">
           <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
             <MoreOutlined
@@ -71,7 +73,7 @@ const FileItemList: React.FC<FileItemProps> = ({
           </Dropdown>
         </div>
       ) : (
-        <div className="w-12"/>
+        <div className="w-12" />
       )}
     </div>
   );
