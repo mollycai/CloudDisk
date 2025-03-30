@@ -2,6 +2,7 @@ package main
 
 import (
 	"cdserver/config"
+	"cdserver/middleware"
 	"cdserver/routes"
 
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,9 @@ func main() {
 
 	// initialize database
 	config.InitDB()
+
+	// initialize logger
+	middleware.NewLogger(2)
 
 	routes.SetupRoutes(router)
 

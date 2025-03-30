@@ -2,18 +2,24 @@ package routes
 
 import (
 	"cdserver/controllers"
+	"cdserver/middleware"
 
 	"github.com/gin-gonic/gin"
+	// "github.com/golang-jwt/jwt/v5"
 )
 
 func SetupRoutes(router *gin.Engine) {
 	userController := controllers.NewUserController()
+	fileController := controllers.NewFileController()
 
-	v1 := router.Group("/api/v1")
+	// public route
+	router.POST("/user/login", userController.Login)
+	router.POST("/user/signup", userController.Signup)
+
+	authGroup := router.Group("/")
+	authGroup.Use(middleware.JWTAuthMiddleware())
+	files := authGroup.Group("/file")
 	{
-		users := v1.Group("/user")
-		{
-			users.POST("", userController.CreateUsers)
-		}
+		files.POST("/file", fileController.Upload)
 	}
 }

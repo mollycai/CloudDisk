@@ -25,10 +25,8 @@ func InitDB() {
 	dbPort := os.Getenv("DB_PORT")
 
 	// create connection string
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
-
-	fmt.Println(dsn)
 
 	// Connect to database
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

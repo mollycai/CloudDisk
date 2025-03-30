@@ -26,3 +26,18 @@ func (s *UserService) CreateUser(user *models.User, password string) error {
 	user.PasswordHash = string(hashedPassword)
 	return s.db.Create(user).Error
 }
+
+func (s *UserService) Login(user *models.User, password string) (uint, error) {
+
+	var userInfo models.User
+
+	if err := s.db.Where("username = ?", user.Username).First(&userInfo).Error; err != nil {
+		return 0, err
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(userInfo.PasswordHash), []byte(password)); err != nil {
+		return 0, err
+	}
+
+	return userInfo.ID, nil
+}
