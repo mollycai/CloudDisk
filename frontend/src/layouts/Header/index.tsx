@@ -5,6 +5,8 @@ import { Button, theme } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 
 import LayoutBreadcrumb from './components/breadcrumb';
+import UserIcon from './components/userIcon';
+import './index.less';
 
 const LayoutHeader = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -13,7 +15,8 @@ const LayoutHeader = () => {
   } = theme.useToken();
 
   return (
-    <Header style={{ padding: 0, background: colorBgContainer }} className="flex">
+    <Header style={{ background: colorBgContainer }} className="flex justify-start p-0">
+      {/* 折叠 */}
       <Button
         type="text"
         icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -24,7 +27,10 @@ const LayoutHeader = () => {
           height: 64,
         }}
       />
-      <LayoutBreadcrumb></LayoutBreadcrumb>
+      {/* 面包屑 */}
+      <LayoutBreadcrumb />
+      {/* 用户头像 */}
+      <UserIcon />
     </Header>
   );
 };
