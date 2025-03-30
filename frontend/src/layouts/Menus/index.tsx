@@ -8,7 +8,7 @@ import menuItems from './mock.tsx';
 import { MenuItem } from './types';
 
 import { setBreadcrumb } from '@/redux/modules/breadcrumb/action';
-import { BreadcrumbItem } from '@/redux/types/breadcrumb.ts';
+import { BreadcrumbItem } from '@/redux/types/index.ts';
 
 const LayoutMenus = () => {
   const { pathname } = useLocation();

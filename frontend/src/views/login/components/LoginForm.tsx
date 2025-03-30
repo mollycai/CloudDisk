@@ -1,13 +1,33 @@
+import { login } from '@/api/modules/login';
+import { ReqLoginForm } from '@/api/types';
+import { HOME_URL } from '@/config/config';
+import { setToken } from '@/redux/modules/globals/action';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, message } from 'antd';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
-    console.log('Received values:', values);
-    // 这里可以添加登录逻辑，比如调用 API
-    message.success('登录成功！');
+  const onFinish = (loginForm: ReqLoginForm) => {
+    console.log('Received values:', loginForm);
+    setLoading(true);
+    // loginForm.password = md5(loginForm.password);
+    login(loginForm)
+      .then(({ token, msg }) => {
+        if (token) {
+          setToken(token);
+          navigate(HOME_URL);
+          message.success('登录成功');
+        }
+        if (msg) message.info(msg);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -52,7 +72,7 @@ const LoginForm = () => {
 
       {/* 登录按钮 */}
       <Form.Item>
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" loading={loading} block>
           登录
         </Button>
       </Form.Item>

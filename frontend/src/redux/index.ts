@@ -3,9 +3,11 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { breadcrumbReducer } from './modules/breadcrumb/reducer';
+import { globalReducer } from './modules/globals/reducer';
 
 // 创建reducer(拆分reducer)
 const reducer = combineReducers({
+  global: globalReducer,
   breadcrumb: breadcrumbReducer,
 });
 
