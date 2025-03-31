@@ -15,6 +15,9 @@ func main() {
 	// initialize database
 	config.InitDB()
 
+	// initialize minio
+	config.InitMinioClient()
+
 	// initialize logger
 	middleware.NewLogger(2)
 
