@@ -46,4 +46,22 @@ interface UploadFileModalProps {
   onUpload: (file: File) => Promise<void>; // 支持异步上传
 }
 
-export type { AddButtonProps, CreateFolderModalProps, FileControlBarProps, FileItemProps, UploadFileModalProps };
+// 面包屑导航项属性
+interface FolderBreadcrumb {
+  id: number | string;
+  name: string;
+  path: string;
+}
+interface HeaderBreadcrumbProps {
+  folderBreadCrumb: FolderBreadcrumb[];
+}
+
+export type {
+  AddButtonProps,
+  CreateFolderModalProps,
+  FileControlBarProps,
+  FileItemProps,
+  FolderBreadcrumb,
+  HeaderBreadcrumbProps,
+  UploadFileModalProps,
+};

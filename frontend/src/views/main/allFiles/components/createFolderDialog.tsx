@@ -17,6 +17,26 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel
       });
   };
 
+  // 验证文件夹名称
+  const validateFolderName = (_: any, value: string) => {
+    if (!value || value.trim() === '') {
+      return Promise.reject(new Error('文件夹名称不能为空'));
+    }
+
+    // 禁止的特殊字符
+    const forbiddenChars = /[\\/*?"|.]/;
+    if (forbiddenChars.test(value)) {
+      return Promise.reject(new Error('不能包含 \\ / * ? " | . 等特殊字符'));
+    }
+
+    // 检查开头和结尾是否有空格
+    if (value !== value.trim()) {
+      return Promise.reject(new Error('名称开头或结尾不能有空格'));
+    }
+
+    return Promise.resolve();
+  };
+
   return (
     <Modal
       title="新建文件夹"
@@ -31,7 +51,11 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel
       <div className="w-100 mb-8 mt-8 flex h-24 justify-center">
         <img src="/src/assets/fileIcon/folder.png" alt="文件夹图标" />
       </div>
-      <Input placeholder="请输入文件夹名称" defaultValue={'新建文件夹'} />
+      <Form form={form} initialValues={{ folderName: '新建文件夹' }}>
+        <Form.Item name="folderName" rules={[{ required: true, validator: validateFolderName }]}>
+          <Input placeholder="请输入文件夹名称" maxLength={50} allowClear />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

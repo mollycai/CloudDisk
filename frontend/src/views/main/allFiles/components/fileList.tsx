@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
 import FileControlBar from './fileControlBar';
 import FileItemGird from './fileItemGird';
 import FileItemList from './fileItemList';
-
-const mockFiles = [
-  { id: 0, fileName: '新建文件夹', fileTime: '2023-06-12', size: '2.4 MB' },
-  { id: 1, fileName: '文档.docx', fileTime: '2023-06-15', size: '2.4 MB' },
-  { id: 2, fileName: '数据.xlsx', fileTime: '2023-06-14', size: '2.4 MB' },
-  { id: 3, fileName: '图片.jpg', fileTime: '2023-06-13', size: '2.4 MB' },
-  { id: 4, fileName: '代码.js', fileTime: '2023-06-12', size: '2.4 MB' },
-];
+import { FolderBreadcrumb } from '../types';
 
 // 表头组件
 const FileListHeader = () => {
@@ -27,23 +21,48 @@ const FileListHeader = () => {
 const FileList: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [files, setFiles] = useState(mockFiles);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+
+  const params = useParams();
+  const folderPath = params['*'] || '';
+
+  // 获取context传参
+  const { files, sortFile, updateBreadcrumb} = useOutletContext<{
+    files: any[];
+		sortFile: (order: 'asc' | 'desc') => void;
+		updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
+  }>();
+
+  // 点击文件夹事件
+  const handleFolderClick = (file: any) => {
+		if (file.type === 'folder') {
+			// 创建新条目
+			const newFolder = {
+				id: file.id,
+				name: file.fileName,
+				path: folderPath ? `/allFiles/${folderPath}/${file.id}` : `/allFiles/${file.id}`
+			};
+
+			// 获取当前缓存
+			const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
+
+			// 更新缓存
+			const newBreadcrumbs = [...cachedBreadcrumbs, newFolder];
+			localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
+			updateBreadcrumb(newFolder);
+    }
+  };
 
   // 全选/取消全选
   const handleSelectAll = (checked: boolean) => {
-    const newSelected = new Set(checked ? files.map((f) => f.id) : []);
+    const newSelected = new Set(checked ? files.map((file) => file.id) : []);
     setSelectedFiles(newSelected);
   };
 
   // 排序文件
   const handleSortChange = (order: 'asc' | 'desc') => {
     setSortOrder(order);
-    setFiles((prev) =>
-      [...prev].sort((a, b) => {
-        return order === 'asc' ? a.fileTime.localeCompare(b.fileTime) : b.fileTime.localeCompare(a.fileTime);
-      }),
-    );
+    sortFile(order);
   };
 
   // 多选
@@ -85,6 +104,7 @@ const FileList: React.FC = () => {
               fileTime={file.fileTime}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
+              onClick={() => handleFolderClick(file)}
             />
           ))}
         </div>
@@ -102,6 +122,7 @@ const FileList: React.FC = () => {
               fileSize={file.size}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
+              onClick={() => handleFolderClick(file)}
             />
           ))}
         </div>

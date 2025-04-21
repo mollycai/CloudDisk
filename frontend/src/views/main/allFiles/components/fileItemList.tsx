@@ -63,7 +63,7 @@ const FileItemList: React.FC<FileItemProps> = ({
 
       {/* 操作按钮 */}
 
-      {isHovered && iconName !== 'folder.png' ? (
+      {isHovered ? (
         <div className="w-12 text-right">
           <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
             <MoreOutlined

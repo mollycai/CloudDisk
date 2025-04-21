@@ -52,7 +52,12 @@ const LayoutMenus = () => {
   );
 
   useEffect(() => {
-    setSelectedKeys([pathname]);
+    // 匹配/allFiles及其子路由
+    if (pathname.startsWith('/allFiles')) {
+      setSelectedKeys(['/allFiles']);
+    } else {
+      setSelectedKeys([pathname]);
+    }
   }, [pathname]);
 
   useEffect(() => {

@@ -42,7 +42,7 @@ const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, is
       )}
 
       {/* 右上角下拉菜单 - 悬停时显示 */}
-      {isHovered && iconName !== 'folder.png' && (
+      {isHovered && (
         <div className="absolute right-2 top-2 z-10" onClick={(e) => e.stopPropagation()}>
           <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
             <MoreOutlined className="text-gray-500 hover:text-gray-700" onClick={(e) => e.stopPropagation()} />
