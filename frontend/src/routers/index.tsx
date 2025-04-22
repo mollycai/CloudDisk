@@ -41,7 +41,7 @@ export const rootRouter: RouteObject[] = [
 ];
 
 const Router = () => {
-  const routes = useRoutes(rootRouter);
+  const routes = useRoutes(rootRouter as any[]);
   return routes;
 };
 
