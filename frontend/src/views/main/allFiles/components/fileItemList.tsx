@@ -1,27 +1,12 @@
-import { getFileIconName } from '@/utils/mapIcon';
-import { MoreOutlined } from '@ant-design/icons';
-import { Checkbox, Dropdown } from 'antd';
-import { useMemo, useState } from 'react';
+import { Checkbox } from 'antd';
+import { useState } from 'react';
 import { FileItemProps } from '../types';
-import { dropdownMenu } from './dropdownMenu';
+import DropdownMenu from './dropdownMenu';
+import useFileIcon from '@/hooks/useFileIcon';
 
-// 动态导入所有图标文件
-const iconModules = import.meta.glob('@/assets/fileIcon/*.png', { eager: true });
-
-const FileItemList: React.FC<FileItemProps> = ({
-  fileName,
-  fileTime,
-  fileSize,
-  onClick,
-  isSelected = false,
-  onSelect,
-}) => {
-  // 获取图标URL，使用useMemo缓存图标URL，避免每次渲染都重新计算
-  const iconName = useMemo(() => getFileIconName(fileName), [fileName]);
-  const iconUrl = useMemo(() => {
-    const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
-    return (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
-  }, [iconName]);
+const FileItemList: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect }) => {
+  // 获取图标URL
+	const iconUrl = useFileIcon(file.fileName);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -51,26 +36,20 @@ const FileItemList: React.FC<FileItemProps> = ({
 
       {/* 文件图标和名称 */}
       <div className="flex min-w-0 flex-1 items-center">
-        <img src={iconUrl} alt={fileName} className="mr-3 h-8 w-8 object-contain" />
-        <span className="truncate">{fileName}</span>
+        <img src={iconUrl} alt={file.fileName} className="mr-3 h-8 w-8 object-contain" />
+        <span className="truncate">{file.fileName}</span>
       </div>
 
       {/* 修改时间 */}
-      <div className="w-40 text-sm text-gray-500">{fileTime}</div>
+      <div className="w-40 text-sm text-gray-500">{file.fileTime}</div>
 
       {/* 文件大小 */}
-      <div className="w-24 text-sm text-gray-500">{fileSize}</div>
+      <div className="w-24 text-sm text-gray-500">{file.fileSize}</div>
 
       {/* 操作按钮 */}
-
       {isHovered ? (
         <div className="w-12 text-right">
-          <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
-            <MoreOutlined
-              className="cursor-pointer text-gray-400 hover:text-gray-600"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </Dropdown>
+          <DropdownMenu file={file} />
         </div>
       ) : (
         <div className="w-12" />

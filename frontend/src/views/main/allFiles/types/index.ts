@@ -1,11 +1,7 @@
 // 文件项属性
 interface FileItemProps {
-  // 文件名
-  fileName: string;
-  // 文件时间（修改时间或创建时间）
-  fileTime: string;
-  // 文件大小
-  fileSize?: string;
+  // 文件
+  file: any;
   // 点击事件处理函数
   onClick?: () => void;
   // 是否选中状态
@@ -56,12 +52,34 @@ interface HeaderBreadcrumbProps {
   folderBreadCrumb: FolderBreadcrumb[];
 }
 
+// 文件详情弹窗属性
+interface FileDetailModalProps {
+  visible: boolean;
+  file: any; // 传递文件信息
+	setVisible: (visible: boolean) => void;
+}
+
+// 重命名文件夹弹窗属性
+interface RenameModalProps {
+	visible: boolean;
+	file: any;
+  setVisible: (visible: boolean) => void;
+}
+
+interface DropdownMenuProps {
+	// @TODO 后面定义file类型
+  file: any;
+}
+
 export type {
   AddButtonProps,
   CreateFolderModalProps,
   FileControlBarProps,
+	FileDetailModalProps,
+	RenameModalProps,
   FileItemProps,
   FolderBreadcrumb,
   HeaderBreadcrumbProps,
-  UploadFileModalProps,
+	UploadFileModalProps,
+	DropdownMenuProps
 };

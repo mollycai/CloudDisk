@@ -1,20 +1,12 @@
-import { getFileIconName } from '@/utils/mapIcon';
-import { MoreOutlined } from '@ant-design/icons';
-import { Checkbox, Dropdown } from 'antd';
-import { useMemo, useState } from 'react';
+import { Checkbox } from 'antd';
+import { useState } from 'react';
 import { FileItemProps } from '../types';
-import { dropdownMenu } from './dropdownMenu';
+import DropdownMenu from './dropdownMenu';
+import useFileIcon from '@/hooks/useFileIcon';
 
-// 动态导入所有图标文件
-const iconModules = import.meta.glob('@/assets/fileIcon/*.png', { eager: true });
-
-const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, isSelected = false, onSelect }) => {
-  // 获取图标URL，使用useMemo缓存图标URL，避免每次渲染都重新计算
-  const iconName = useMemo(() => getFileIconName(fileName), [fileName]);
-  const iconUrl = useMemo(() => {
-    const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
-    return (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
-  }, [iconName]);
+const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect }) => {
+	// 获取图标URL
+  const iconUrl = useFileIcon(file.fileName);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -44,24 +36,22 @@ const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, is
       {/* 右上角下拉菜单 - 悬停时显示 */}
       {isHovered && (
         <div className="absolute right-2 top-2 z-10" onClick={(e) => e.stopPropagation()}>
-          <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
-            <MoreOutlined className="text-gray-500 hover:text-gray-700" onClick={(e) => e.stopPropagation()} />
-          </Dropdown>
+          <DropdownMenu file={file} />
         </div>
       )}
 
       {/* 文件图标 */}
       <div className="mb-2 flex h-20 w-20 items-center justify-center">
-        <img src={iconUrl} alt={fileName} className="h-full w-full object-contain" />
+        <img src={iconUrl} alt={file.fileName} className="h-full w-full object-contain" />
       </div>
 
       {/* 文件名 */}
       <div className="w-full text-center">
-        <p className="truncate text-sm font-medium text-gray-800">{fileName}</p>
+        <p className="truncate text-sm font-medium text-gray-800">{file.fileName}</p>
       </div>
 
       {/* 文件时间 */}
-      <div className="mt-1 text-xs text-gray-500">{fileTime}</div>
+      <div className="mt-1 text-xs text-gray-500">{file.fileTime}</div>
     </div>
   );
 };

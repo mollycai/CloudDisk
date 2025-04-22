@@ -1,6 +1,7 @@
 import { Form, Input, Modal } from 'antd';
 import React from 'react';
 import { CreateFolderModalProps } from '../types';
+import useValidateName from '@/hooks/useValidateName';
 
 const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel, onCreate }) => {
   const [form] = Form.useForm();
@@ -15,26 +16,6 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel
       .catch((info) => {
         console.log('Validate Failed:', info);
       });
-  };
-
-  // 验证文件夹名称
-  const validateFolderName = (_: any, value: string) => {
-    if (!value || value.trim() === '') {
-      return Promise.reject(new Error('文件夹名称不能为空'));
-    }
-
-    // 禁止的特殊字符
-    const forbiddenChars = /[\\/*?"|.]/;
-    if (forbiddenChars.test(value)) {
-      return Promise.reject(new Error('不能包含 \\ / * ? " | . 等特殊字符'));
-    }
-
-    // 检查开头和结尾是否有空格
-    if (value !== value.trim()) {
-      return Promise.reject(new Error('名称开头或结尾不能有空格'));
-    }
-
-    return Promise.resolve();
   };
 
   return (
@@ -52,7 +33,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel
         <img src="/src/assets/fileIcon/folder.png" alt="文件夹图标" />
       </div>
       <Form form={form} initialValues={{ folderName: '新建文件夹' }}>
-        <Form.Item name="folderName" rules={[{ required: true, validator: validateFolderName }]}>
+        <Form.Item name="folderName" rules={[{ required: true, validator: useValidateName }]}>
           <Input placeholder="请输入文件夹名称" maxLength={50} allowClear />
         </Form.Item>
       </Form>

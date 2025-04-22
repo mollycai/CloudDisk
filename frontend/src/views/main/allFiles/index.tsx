@@ -33,10 +33,6 @@ const AllFiles: React.FC = () => {
     JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]'),
   );
   const navigate = useNavigate();
-  // useEffect(() => {
-  // 	localStorage.setItem('folderBreadCrumb', JSON.stringify(folderBreadCrumb));
-  // 	console.log(11111, folderBreadCrumb)
-  // }, [folderBreadCrumb]);
   const updateBreadcrumb = (folder: FolderBreadcrumb) => {
     navigate(folder.path);
   };

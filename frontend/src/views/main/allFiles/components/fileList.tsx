@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
+import { FolderBreadcrumb } from '../types';
 import FileControlBar from './fileControlBar';
 import FileItemGird from './fileItemGird';
 import FileItemList from './fileItemList';
-import { FolderBreadcrumb } from '../types';
 
 // 表头组件
 const FileListHeader = () => {
@@ -21,35 +21,41 @@ const FileListHeader = () => {
 const FileList: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>(
+    (localStorage.getItem('fileViewMode') || 'grid') as 'list' | 'grid',
+  );
+
+  useEffect(() => {
+    localStorage.setItem('fileViewMode', viewMode);
+  }, [viewMode]);
 
   const params = useParams();
   const folderPath = params['*'] || '';
 
   // 获取context传参
-  const { files, sortFile, updateBreadcrumb} = useOutletContext<{
+  const { files, sortFile, updateBreadcrumb } = useOutletContext<{
     files: any[];
-		sortFile: (order: 'asc' | 'desc') => void;
-		updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
+    sortFile: (order: 'asc' | 'desc') => void;
+    updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
   }>();
 
   // 点击文件夹事件
   const handleFolderClick = (file: any) => {
-		if (file.type === 'folder') {
-			// 创建新条目
-			const newFolder = {
-				id: file.id,
-				name: file.fileName,
-				path: folderPath ? `/allFiles/${folderPath}/${file.id}` : `/allFiles/${file.id}`
-			};
+    if (file.type === 'folder') {
+      // 创建新条目
+      const newFolder = {
+        id: file.id,
+        name: file.fileName,
+        path: folderPath ? `/allFiles/${folderPath}/${file.id}` : `/allFiles/${file.id}`,
+      };
 
-			// 获取当前缓存
-			const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
+      // 获取当前缓存
+      const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
 
-			// 更新缓存
-			const newBreadcrumbs = [...cachedBreadcrumbs, newFolder];
-			localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
-			updateBreadcrumb(newFolder);
+      // 更新缓存
+      const newBreadcrumbs = [...cachedBreadcrumbs, newFolder];
+      localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
+      updateBreadcrumb(newFolder);
     }
   };
 
@@ -100,8 +106,7 @@ const FileList: React.FC = () => {
           {files.map((file) => (
             <FileItemGird
               key={file.id}
-              fileName={file.fileName}
-              fileTime={file.fileTime}
+              file={file}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
               onClick={() => handleFolderClick(file)}
@@ -117,9 +122,7 @@ const FileList: React.FC = () => {
           {files.map((file) => (
             <FileItemList
               key={file.id}
-              fileName={file.fileName}
-              fileTime={file.fileTime}
-              fileSize={file.size}
+              file={file}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
               onClick={() => handleFolderClick(file)}
