@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
 import { FolderBreadcrumb } from '../types';
 import FileControlBar from './fileControlBar';
-import FileItemGird from './fileItemGird';
-import FileItemList from './fileItemList';
+import FileItemGird from '@/components/fileItemGird';
+import FileItemList from '@/components/fileItemList';
+import MultiSelectActions from '@/components/MultiSelectAction';
 
 // 表头组件
 const FileListHeader = () => {
@@ -84,7 +85,22 @@ const FileList: React.FC = () => {
   };
 
   // 检查是否全选
-  const isAllSelected = selectedFiles.size === files.length && files.length > 0;
+	const isAllSelected = selectedFiles.size === files.length && files.length > 0;
+	
+	// 批量下载
+	const handleMultiDownload = () => {
+		console.log('下载文件');
+	}
+
+	// 批量删除
+	const handleMultiDelete = () => { 
+		console.log('删除文件');
+	}
+
+	// 批量分享
+	const handleMultiShare = () => {
+		console.log('分享文件');
+	}
 
   return (
     <div className="pt-4">
@@ -129,7 +145,16 @@ const FileList: React.FC = () => {
             />
           ))}
         </div>
-      )}
+			)}
+			
+			{/* 多选时的控制列表 */}
+			<MultiSelectActions
+        selectedFiles={selectedFiles}
+        allFiles={files}
+        onDownload={handleMultiDownload}
+        onDelete={handleMultiDelete}
+        onShare={handleMultiShare}
+      />
     </div>
   );
 };

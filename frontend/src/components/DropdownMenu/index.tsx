@@ -1,9 +1,9 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps } from 'antd';
 import { useState } from 'react';
-import { DropdownMenuProps } from '../types';
-import FileInfoDialog from './FIleInfoDialog';
-import RenameDialog from './renameDialog';
+import { DropdownMenuProps } from './types';
+import FileInfoDialog from './components/fileInfoDialog';
+import RenameDialog from './components/renameDialog';
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ file }) => {
   // 展示文件详情

@@ -1,8 +1,19 @@
 import { Checkbox } from 'antd';
 import { useState } from 'react';
-import { FileItemProps } from '../types';
-import DropdownMenu from './dropdownMenu';
+import DropdownMenu from '@/components/DropdownMenu';
 import useFileIcon from '@/hooks/useFileIcon';
+
+// 文件项属性
+interface FileItemProps {
+  // 文件
+  file: any;
+  // 点击事件处理函数
+  onClick?: () => void;
+  // 是否选中状态
+  isSelected?: boolean;
+  // 选中事件
+  onSelect?: (checked: boolean) => void;
+}
 
 const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect }) => {
 	// 获取图标URL
