@@ -20,6 +20,7 @@ func SetupRoutes(router *gin.Engine) {
 	authGroup.Use(middleware.JWTAuthMiddleware())
 	files := authGroup.Group("/file")
 	{
-		files.POST("/file", fileController.Upload)
+		files.POST("/upload", fileController.Upload)
+		files.GET("/files/:path", fileController.Files)
 	}
 }
