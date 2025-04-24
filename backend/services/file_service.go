@@ -119,6 +119,31 @@ func (s *FileService) ListFiles(c *gin.Context) ([]minio.ObjectInfo, error) {
 	return files, nil
 }
 
+func (s *FileService) DeleteFile(c *gin.Context) error {
+	ctx := context.Background()
+	bucketName := getBucketName(c)
+
+	// 获取文件名和路径
+	filename := c.PostForm("text")
+	if filename == "" {
+		return fmt.Errorf("filename is required")
+	}
+	path := c.PostForm("path")
+	if path == "" {
+		return fmt.Errorf("path is required")
+	}
+
+	// 删除文件
+	log.Println("Deleting file from MinIO:", path+filename)
+	err := s.client.RemoveObject(ctx, bucketName, path+filename, minio.RemoveObjectOptions{})
+	if err != nil {
+		return fmt.Errorf("failed to delete file from MinIO: %w", err)
+	}
+
+	log.Printf("File deleted successfully from bucket '%s' at path '%s'", bucketName, path+filename)
+	return nil
+}
+
 func getBucketName(c *gin.Context) string {
 	username, exists := c.Get("username")
 	if !exists {
