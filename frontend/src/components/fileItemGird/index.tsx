@@ -12,10 +12,12 @@ interface FileItemProps {
   // 是否选中状态
   isSelected?: boolean;
   // 选中事件
-  onSelect?: (checked: boolean) => void;
+	onSelect?: (checked: boolean) => void;
+	// 是否是回收站的文件
+	isInRecycleBin?: boolean;
 }
 
-const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect }) => {
+const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect, isInRecycleBin = false }) => {
 	// 获取图标URL
   const iconUrl = useFileIcon(file.fileName);
 
@@ -45,7 +47,7 @@ const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = fal
       )}
 
       {/* 右上角下拉菜单 - 悬停时显示 */}
-      {isHovered && (
+      {isHovered && !isInRecycleBin && (
         <div className="absolute right-2 top-2 z-10" onClick={(e) => e.stopPropagation()}>
           <DropdownMenu file={file} />
         </div>

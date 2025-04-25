@@ -211,4 +211,55 @@ export default defineFakeRoute([
       });
     },
   },
+  {
+    url: '/file/recycleBin',
+    method: 'post',
+    response: () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            code: 200,
+            data: [
+              {
+                id: 201,
+                fileName: '音乐合集.mp3',
+                fileTime: '2023-06-10',
+                size: '128 MB',
+                type: 'file',
+                url: '/files/audio/201',
+                deletedTime: '2023-06-20'  // 新增删除时间字段
+              },
+              {
+                id: 202,
+                fileName: '录音文件.wav',
+                fileTime: '2023-06-11',
+                size: '56 MB',
+                type: 'file',
+                url: '/files/audio/202',
+                deletedTime: '2023-06-21'
+              },
+              {
+                id: 203,
+                fileName: '项目文档.pdf',
+                fileTime: '2023-06-12',
+                size: '10 MB',
+                type: 'file',
+                url: '/files/doc/203',
+                deletedTime: '2023-06-22'
+              },
+              {
+                id: 204,
+                fileName: '宣传视频.mp4',
+                fileTime: '2023-06-13',
+                size: '2.8 GB',
+                type: 'file',
+                url: '/files/video/204',
+                deletedTime: '2023-06-23'
+              }
+            ]
+          });
+        }, 500);
+      });
+    }
+  }
 ]);

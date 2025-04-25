@@ -1,7 +1,7 @@
 import { getFilesByCategory } from '@/api/modules/fileCategory';
 import { useEffect, useState } from 'react';
 import CategoryController from './components/categoryController';
-import FileCategoryListProps from './components/fileCategoryList';
+import FileCategoryList from './components/fileCategoryList';
 import './index.less';
 import { TagItem } from './types';
 
@@ -41,7 +41,7 @@ const FileCategory = () => {
   return (
     <>
       <CategoryController tagsList={tagsData} selectedTags={selectedTags} handleChange={handleChange} />
-      <FileCategoryListProps files={fileList} />
+      <FileCategoryList files={fileList} />
     </>
   );
 };
