@@ -8,7 +8,7 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFt
 	"email": "test@123.com"
 }
 
-###
+### 文件上传
 
 POST http://127.0.0.1:8080/file/upload HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDU1Njk3NTUsIm5iZiI6MTc0NTQ4MzM1NSwiaWF0IjoxNzQ1NDgzMzU1fQ.eropawMgOchjWYWOIv3KQJMH0GRbo5YRZC2oHQ23ReA
@@ -29,7 +29,17 @@ Content-Type: image/png
 < ./1.png
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
-### 
+### 查询目录下文件 
 
 GET http://127.0.0.1:8080/file/files/tmp HTTP/1.1
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDU1Njk3NTUsIm5iZiI6MTc0NTQ4MzM1NSwiaWF0IjoxNzQ1NDgzMzU1fQ.eropawMgOchjWYWOIv3KQJMH0GRbo5YRZC2oHQ23ReA
+
+### 删除文件
+
+DELETE http://127.0.0.1:8080/file/files/tmp HTTP/1.1
+
+
+### 修改文件名
+
+
+### 移动文件

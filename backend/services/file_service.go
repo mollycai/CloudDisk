@@ -144,6 +144,28 @@ func (s *FileService) DeleteFile(c *gin.Context) error {
 	return nil
 }
 
+func (s *FileService) ModifyFilename(c *gin.Context, srcFilename string, dstFilename string) error {
+	ctx := context.Background()
+	bucketName := getBucketName(c)
+
+	_, err := s.client.CopyObject(ctx, minio.CopyDestOptions{
+		Bucket: bucketName,
+		Object: srcFilename,
+	}, minio.CopySrcOptions{
+		Bucket: bucketName,
+		Object: dstFilename,
+	})
+
+	if err != nil {
+		return fmt.Errorf("failed to copy file from src to dst")
+	}
+
+	log.Printf("Filename modified successfully ")
+
+	return nil
+}
+
+// getBucketName generates a bucket name based on the username from the context.
 func getBucketName(c *gin.Context) string {
 	username, exists := c.Get("username")
 	if !exists {

@@ -46,6 +46,7 @@ func (controller *UserController) Signup(c *gin.Context) {
 	})
 }
 
+// 登录
 func (controllers *UserController) Login(c *gin.Context) {
 	var req models.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
