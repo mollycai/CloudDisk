@@ -21,7 +21,9 @@ func SetupRoutes(router *gin.Engine) {
 	files := authGroup.Group("/file")
 	{
 		files.POST("/upload", fileController.Upload)
-		files.GET("/files/:path", fileController.Files)
-		files.DELETE("/delete", fileController.Delete)
+		files.POST("/files", fileController.Files)
+		files.POST("/delete", fileController.Delete)
+		files.POST("/modify", fileController.ModifyFilename)
+		files.POST("/move", fileController.ModifyFilename)
 	}
 }

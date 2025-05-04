@@ -24,16 +24,16 @@ func NewFileService() *FileService {
 	}
 }
 
-func (s *FileService) IsBucketExisted(c *gin.Context) (error, bool) {
+func (s *FileService) IsBucketExisted(c *gin.Context) (bool, error) {
 	bucketName := getBucketName(c)
 	ctx := context.Background()
 	exists, err := s.client.BucketExists(ctx, bucketName)
 
 	if err != nil {
-		return err, false
+		return false, err
 	}
 
-	return nil, exists
+	return exists, nil
 }
 
 func (s *FileService) CreateBucket(c *gin.Context) error {
@@ -63,7 +63,7 @@ func (s *FileService) UploadFile(c *gin.Context) error {
 	}
 
 	// 获取文件名和路径
-	filename := c.PostForm("text")
+	filename := c.PostForm("filename")
 	if filename == "" {
 		return fmt.Errorf("filename is required")
 	}
@@ -97,7 +97,7 @@ func (s *FileService) UploadFile(c *gin.Context) error {
 	return nil
 }
 
-func (s *FileService) ListFiles(c *gin.Context) ([]minio.ObjectInfo, error) {
+func (s *FileService) ListFiles(c *gin.Context, path string) ([]minio.ObjectInfo, error) {
 	ctx := context.Background()
 	bucketName := getBucketName(c)
 
@@ -105,7 +105,7 @@ func (s *FileService) ListFiles(c *gin.Context) ([]minio.ObjectInfo, error) {
 	log.Println("Listing files in bucket:", bucketName)
 	objectsCh := s.client.ListObjects(ctx, bucketName, minio.ListObjectsOptions{
 		Recursive: true,
-		Prefix:    c.Query("path"),
+		Prefix:    path,
 	})
 
 	var files []minio.ObjectInfo
@@ -119,28 +119,23 @@ func (s *FileService) ListFiles(c *gin.Context) ([]minio.ObjectInfo, error) {
 	return files, nil
 }
 
-func (s *FileService) DeleteFile(c *gin.Context) error {
+func (s *FileService) DeleteFile(c *gin.Context, filename string) error {
 	ctx := context.Background()
 	bucketName := getBucketName(c)
 
 	// 获取文件名和路径
-	filename := c.PostForm("text")
 	if filename == "" {
 		return fmt.Errorf("filename is required")
 	}
-	path := c.PostForm("path")
-	if path == "" {
-		return fmt.Errorf("path is required")
-	}
 
 	// 删除文件
-	log.Println("Deleting file from MinIO:", path+filename)
-	err := s.client.RemoveObject(ctx, bucketName, path+filename, minio.RemoveObjectOptions{})
+	log.Println("Deleting file from MinIO:", filename)
+	err := s.client.RemoveObject(ctx, bucketName, filename, minio.RemoveObjectOptions{})
 	if err != nil {
 		return fmt.Errorf("failed to delete file from MinIO: %w", err)
 	}
 
-	log.Printf("File deleted successfully from bucket '%s' at path '%s'", bucketName, path+filename)
+	log.Printf("File deleted successfully from bucket '%s' at path '%s'", bucketName, filename)
 	return nil
 }
 
@@ -150,13 +145,14 @@ func (s *FileService) ModifyFilename(c *gin.Context, srcFilename string, dstFile
 
 	_, err := s.client.CopyObject(ctx, minio.CopyDestOptions{
 		Bucket: bucketName,
-		Object: srcFilename,
+		Object: dstFilename,
 	}, minio.CopySrcOptions{
 		Bucket: bucketName,
-		Object: dstFilename,
+		Object: srcFilename,
 	})
 
 	if err != nil {
+		log.Print(err.Error())
 		return fmt.Errorf("failed to copy file from src to dst")
 	}
 

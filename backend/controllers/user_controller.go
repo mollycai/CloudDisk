@@ -41,9 +41,7 @@ func (controller *UserController) Signup(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, models.SignupResponse{
-		Message: "Signup succeeded",
-	})
+	c.JSON(http.StatusCreated, gin.H{"code": http.StatusCreated, "msg": "User created successed", "data": nil})
 }
 
 // 登录
@@ -75,8 +73,5 @@ func (controllers *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, models.LoginResponse{
-		Token: token,
-	})
-
+	c.JSON(http.StatusOK, gin.H{"code": http.StatusOK, "msg": "Login successed", "data": token})
 }
