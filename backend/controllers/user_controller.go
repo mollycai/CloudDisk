@@ -28,7 +28,8 @@ func NewUserController() *UserController {
 func (controller *UserController) Signup(c *gin.Context) {
 	var req models.SignupRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error(), "code": http.StatusBadRequest, "data": nil})
 		return
 	}
 
@@ -38,7 +39,8 @@ func (controller *UserController) Signup(c *gin.Context) {
 	}
 
 	if err := controller.userService.CreateUser(&user, req.Password); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "code": http.StatusInternalServerError, "data": nil})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{"code": http.StatusCreated, "msg": "User created successed", "data": nil})
@@ -48,8 +50,8 @@ func (controller *UserController) Signup(c *gin.Context) {
 func (controllers *UserController) Login(c *gin.Context) {
 	var req models.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Print(err)
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error(), "code": http.StatusBadRequest, "data": nil})
+		log.Print(err.Error())
 		return
 	}
 
@@ -60,16 +62,16 @@ func (controllers *UserController) Login(c *gin.Context) {
 	id, err := controllers.userService.Login(&user, req.Password)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		log.Print(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error(), "code": http.StatusInternalServerError, "data": nil})
+		log.Print(err.Error())
 		return
 	}
 
 	token, err := utils.GenerateToken(req.Username, id)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		log.Print("Line 73", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error(), "code": http.StatusInternalServerError, "data": nil})
+		log.Print(err.Error())
 		return
 	}
 
