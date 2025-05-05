@@ -110,7 +110,7 @@ func (s *FileService) ListFiles(c *gin.Context, path string) ([]minio.ObjectInfo
 	// 列出文件
 	log.Println("Listing files in bucket:", bucketName)
 	objectsCh := s.client.ListObjects(ctx, bucketName, minio.ListObjectsOptions{
-		Recursive: true,
+		Recursive: false,
 		Prefix:    path,
 	})
 
