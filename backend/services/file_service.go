@@ -5,7 +5,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/url"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minio/minio-go/v7"
@@ -159,6 +161,19 @@ func (s *FileService) ModifyFilename(c *gin.Context, srcFilename string, dstFile
 	log.Printf("Filename modified successfully ")
 
 	return nil
+}
+
+func (s *FileService) GetFileURL(c *gin.Context, filename string) (url.URL, error) {
+	ctx := context.Background()
+	bucketName := getBucketName(c)
+
+	u, err := s.client.PresignedGetObject(ctx, bucketName, filename, time.Second*60*60*24, url.Values{})
+
+	if err != nil {
+		return url.URL{}, err
+	}
+
+	return *u, nil
 }
 
 // getBucketName generates a bucket name based on the username from the context.

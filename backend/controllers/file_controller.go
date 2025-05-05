@@ -167,7 +167,31 @@ func (controller *FileController) ModifyFilename(c *gin.Context) {
 
 }
 
-// 移动文件
+// 下载文件
+func (controller *FileController) DownloadFile(c *gin.Context) {
+	err := controller.checkUserBucket(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "code": http.StatusInternalServerError, "data": nil})
+		return
+	}
+
+	var req FileListingRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error(), "data": nil, "code": http.StatusBadRequest})
+		log.Print(err.Error())
+		return
+	}
+
+	filename := req.Path
+
+	u, err := controller.fileService.GetFileURL(c, filename)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "code": http.StatusInternalServerError, "data": nil})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": u.String(), "code": http.StatusOK, "msg": ""})
+}
 
 // 检查是否存在用户对应的 bucket
 func (controller *FileController) checkUserBucket(c *gin.Context) error {

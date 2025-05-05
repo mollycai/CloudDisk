@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDY0MzEzNzIsIm5iZiI6MTc0NjM0NDk3MiwiaWF0IjoxNzQ2MzQ0OTcyfQ.3rU83Ku3B9ew7p39lStKFHyTEWLQ8Tb0pxDcz7Y98tY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDY1MjUwNzEsIm5iZiI6MTc0NjQzODY3MSwiaWF0IjoxNzQ2NDM4NjcxfQ.0N5tw2qHtDPGEy-sn9K7zzBzJ2epCee1QuWwzZnETzw
 
 
 ###
@@ -36,7 +36,7 @@ Content-Type: image/png
 ### 查询目录下文件 
 
 # POST http://127.0.0.1:8080/file/files HTTP/1.1
-POST http://103.91.209.53:8080/file/files HTTP/1.1
+POST http://103.91.209.53:31866/file/files HTTP/1.1
 Content-Type: application/json
 Authorization: {{token}} 
 
@@ -88,4 +88,14 @@ Authorization: {{token}}
 			"dstname": "tmp/background2.jpg"
 		}
 	]
+}
+
+### 文件下载
+# POST http://103.91.209.53:31866/file/download HTTP/1.1
+POST http://127.0.0.1:31866/file/download HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}} 
+
+{
+	"path": "tmp/background2.jpg"
 }
