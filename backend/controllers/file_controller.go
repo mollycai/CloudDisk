@@ -46,7 +46,29 @@ func (controller *FileController) Upload(c *gin.Context) {
 		return
 	}
 
-	err = controller.fileService.UploadFile(c)
+	// 从 form-data 中获取文件
+	file, err := c.FormFile("image")
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": nil, "msg": err.Error()})
+		return
+	}
+
+	// 获取文件名和路径
+	filename := c.PostForm("filename")
+	if filename == "" {
+		log.Println("filename filed is empty")
+		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": nil, "msg": "filename can't be empty"})
+		return
+	}
+	path := c.PostForm("path")
+	if path == "" {
+		log.Println("path filed is empty")
+		c.JSON(http.StatusBadRequest, gin.H{"code": http.StatusBadRequest, "data": nil, "msg": "path can't be empty"})
+		return
+	}
+
+	err = controller.fileService.UploadFile(c, file, path, filename)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error(), "code": http.StatusInternalServerError, "data": nil})
 		return
@@ -191,6 +213,33 @@ func (controller *FileController) DownloadFile(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": u.String(), "code": http.StatusOK, "msg": ""})
+}
+
+// 新建文件夹
+func (controller *FileController) NewFolder(c *gin.Context) {
+	err := controller.checkUserBucket(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "code": http.StatusInternalServerError, "data": nil})
+		return
+	}
+
+	var req FileListingRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error(), "data": nil, "code": http.StatusBadRequest})
+		log.Print(err.Error())
+		return
+	}
+
+	folderPath := req.Path
+
+	err = controller.fileService.UploadEmptyFile(c, folderPath)
+	if err != nil {
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "data": nil, "code": http.StatusInternalServerError})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"code": http.StatusOK, "data": nil, "msg": "Folder created succeeded"})
 }
 
 // 检查是否存在用户对应的 bucket

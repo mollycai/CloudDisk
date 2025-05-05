@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"mime/multipart"
 	"net/url"
 	"strings"
 	"time"
@@ -55,24 +56,9 @@ func (s *FileService) CreateBucket(c *gin.Context) error {
 	return nil
 }
 
-func (s *FileService) UploadFile(c *gin.Context) error {
+// 上传文件
+func (s *FileService) UploadFile(c *gin.Context, file *multipart.FileHeader, path string, filename string) error {
 	ctx := context.Background()
-
-	// 从 form-data 中获取文件
-	file, err := c.FormFile("image")
-	if err != nil {
-		return fmt.Errorf("failed to get file from form-data: %w", err)
-	}
-
-	// 获取文件名和路径
-	filename := c.PostForm("filename")
-	if filename == "" {
-		return fmt.Errorf("filename is required")
-	}
-	path := c.PostForm("path")
-	if path == "" {
-		return fmt.Errorf("path is required")
-	}
 
 	// 获取 bucket 名称
 	bucketName := getBucketName(c)
@@ -99,6 +85,24 @@ func (s *FileService) UploadFile(c *gin.Context) error {
 	return nil
 }
 
+// 上传空文件
+func (s *FileService) UploadEmptyFile(c *gin.Context, folderPath string) error {
+	ctx := context.Background()
+
+	// 获取 bucket 名称
+	bucketName := getBucketName(c)
+
+	_, err := s.client.PutObject(ctx, bucketName, folderPath, nil, 0, minio.PutObjectOptions{})
+	if err != nil {
+		return fmt.Errorf("创建文件夹失败: %v\n", err)
+	}
+
+	log.Printf("成功创建文件夹: %s\n", folderPath)
+
+	return nil
+}
+
+// 列出文件
 func (s *FileService) ListFiles(c *gin.Context, path string) ([]minio.ObjectInfo, error) {
 	ctx := context.Background()
 	bucketName := getBucketName(c)
@@ -121,6 +125,7 @@ func (s *FileService) ListFiles(c *gin.Context, path string) ([]minio.ObjectInfo
 	return files, nil
 }
 
+// 删除文件
 func (s *FileService) DeleteFile(c *gin.Context, filename string) error {
 	ctx := context.Background()
 	bucketName := getBucketName(c)
