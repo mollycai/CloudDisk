@@ -27,12 +27,12 @@ class RequestHttp {
     RequestHttp.axiosInstance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         NProgress.start();
-        const whiteList = ['/refresh-token', '/login'];
+        const whiteList = ['/register', '/login'];
         return whiteList.some((url) => config.url?.endsWith(url))
           ? config
           : new Promise((resolve) => {
               // @TODO 添加token
-              const token: string = store.getState().global.token;
+              const token: string = localStorage.getItem('token') || store.getState().global.token;
               if (token) {
                 config.headers = config.headers || {};
                 config.headers['Authorization'] = token;
@@ -56,7 +56,7 @@ class RequestHttp {
         return response;
       },
       async (error: AxiosError) => {
-        NProgress.done();
+				NProgress.done();
         return Promise.reject(error);
       },
     );

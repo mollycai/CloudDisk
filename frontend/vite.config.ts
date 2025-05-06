@@ -24,7 +24,7 @@ export default defineConfig({
       infixName: false,
 			enableProd: true,
 			watch: false,
-			basename: 'api'
+			basename: 'mock'
     }),
   ],
   resolve: {
@@ -36,12 +36,12 @@ export default defineConfig({
     port: 5173,
     host: '0.0.0.0',
     proxy: {
-      // '^/api/.*': {
-      //   // @TODO 这里填写后端地址
-      //   target: 'http://127.0.0.1:3000',
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/api/, ''),
-      // },
+      '/api': {
+        // @TODO 这里填写后端地址
+        target: 'http://103.91.209.53:31866/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
 });

@@ -1,7 +1,7 @@
 import { HashRouter } from 'react-router-dom';
 
 import Router from '@/routers/index';
-// import AuthRouter from './routers/utils/authRouter';
+import AuthRouter from './routers/utils/authRouter';
 
 function App() {
   return (
@@ -13,9 +13,9 @@ function App() {
           v7_startTransition: true,
         }}
       >
-        {/* <AuthRouter> */}
-        <Router />
-        {/* </AuthRouter> */}
+        <AuthRouter>
+          <Router />
+        </AuthRouter>
       </HashRouter>
     </>
   );

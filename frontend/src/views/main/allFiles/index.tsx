@@ -8,6 +8,7 @@ import HeaderBreadcrumb from './components/headerBreadcrumb';
 import UploadFileModal from './components/uploadFileDialog';
 import './index.less';
 import { FolderBreadcrumb } from './types';
+import { adaptBackendToFrontend } from '@/utils/fileAdapt';
 
 const AllFiles: React.FC = () => {
   // 新建文件夹弹窗
@@ -35,16 +36,21 @@ const AllFiles: React.FC = () => {
   const navigate = useNavigate();
   const updateBreadcrumb = (folder: FolderBreadcrumb) => {
     navigate(folder.path);
-  };
+	};
 
-  // 获取模拟数据
+  // 获取数据
   const params = useParams();
   const folderPath = params['*'] || '';
   const [files, setFiles] = useState<any[]>([]);
-  const fetchFiles = async (currentFolderId: any) => {
+  const fetchFiles = async (currentFolderPath: any) => {
     try {
-      const res = await getAllFile(currentFolderId || 0);
-      setFiles(res.data.data);
+			const res = await getAllFile(currentFolderPath || "");
+			if (res.data.code === 200) {
+				const fileList = adaptBackendToFrontend(res.data.data, currentFolderPath)
+				setFiles(fileList)
+			} else { 
+				message.error(`获取文件列表失败:${res.data.message}`);
+			}
     } catch (error) {
       message.error(`获取文件列表失败:${error}`);
     }
@@ -54,10 +60,9 @@ const AllFiles: React.FC = () => {
 		if (folderPath) {
 			// 分割路由路径，获取最后一个id
       const folderIdArray = folderPath.split('/');
-      const currentFolderId = folderIdArray[folderIdArray.length - 1];
 
       // 获取文件数据
-      fetchFiles(currentFolderId);
+      fetchFiles(folderPath + '/');
 
       // 处理面包屑
 			const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
@@ -66,7 +71,7 @@ const AllFiles: React.FC = () => {
         return (
           existing || {
             id,
-            name: `文件夹 ${id}`,
+            name: `${id}`,
             path: `/allFiles/${folderIdArray.slice(0, index + 1).join('/')}`,
           }
         );
@@ -76,7 +81,7 @@ const AllFiles: React.FC = () => {
       setFolderBreadCrumb(newBreadcrumbs);
       localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
     } else {
-      fetchFiles(0);
+      fetchFiles('');
       setFolderBreadCrumb([]);
       localStorage.setItem('folderBreadCrumb', '[]');
     }

@@ -1,12 +1,12 @@
 import { http } from '..';
-import { ReqLoginForm, ReqRegisterForm } from '../types';
+import { responseType } from '../types';
 
 /** 登录 */
-export const login = (data?: ReqLoginForm): Promise<{ token?: string; msg?: string }> => {
+export const login = (data?: any): Promise<responseType> => {
   return http.request('post', '/api/user/login', { data });
 };
 
 /** 注册 */
-export const register = (data?: ReqRegisterForm): Promise<{ msg?: string }> => {
+export const register = (data?: any): Promise<responseType> => {
   return http.request('post', '/api/user/signup', { data });
 };

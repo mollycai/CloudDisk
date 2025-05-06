@@ -37,7 +37,7 @@ const FileList: React.FC = () => {
   const { files, sortFile, updateBreadcrumb } = useOutletContext<{
     files: any[];
     sortFile: (order: 'asc' | 'desc') => void;
-    updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
+		updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
   }>();
 
   // 点击文件夹事件
@@ -48,7 +48,7 @@ const FileList: React.FC = () => {
         id: file.id,
         name: file.fileName,
         path: folderPath ? `/allFiles/${folderPath}/${file.id}` : `/allFiles/${file.id}`,
-      };
+			};
 
       // 获取当前缓存
       const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
@@ -56,7 +56,7 @@ const FileList: React.FC = () => {
       // 更新缓存
       const newBreadcrumbs = [...cachedBreadcrumbs, newFolder];
       localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
-      updateBreadcrumb(newFolder);
+			updateBreadcrumb(newFolder);
     }
   };
 

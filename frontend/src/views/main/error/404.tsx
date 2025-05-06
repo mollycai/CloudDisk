@@ -2,13 +2,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button, Result } from 'antd';
 
-import { HOME_PATH } from '@/config/config';
 import './index.less';
 
 const NotFound = () => {
   const navigate = useNavigate();
   const goHome = () => {
-    navigate(HOME_PATH);
+    navigate('/home');
   };
   return (
     <Result

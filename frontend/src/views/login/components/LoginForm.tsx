@@ -1,5 +1,4 @@
 import { login } from '@/api/modules/login';
-import { ReqLoginForm } from '@/api/types';
 import { HOME_URL } from '@/config/config';
 import { setToken } from '@/redux/modules/globals/action';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
@@ -7,23 +6,26 @@ import { Button, Checkbox, Form, Input, message } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface ReqLoginForm {
+  username: string;
+	password: string;
+	remember?: boolean;
+}
+
 const LoginForm = () => {
-  const [form] = Form.useForm();
+	const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const onFinish = (loginForm: ReqLoginForm) => {
-    console.log('Received values:', loginForm);
     setLoading(true);
-    // loginForm.password = md5(loginForm.password);
     login(loginForm)
-      .then(({ token, msg }) => {
-        if (token) {
-          setToken(token);
+			.then((data) => {
+        if (data.data.code === 200) {
+          setToken(data.data.data);
           navigate(HOME_URL);
-          message.success('登录成功');
+          message.success("登录成功");
         }
-        if (msg) message.info(msg);
       })
       .finally(() => {
         setLoading(false);
@@ -39,7 +41,11 @@ const LoginForm = () => {
     <Form
       form={form}
       name="login-form"
-      initialValues={{ remember: true }}
+			initialValues={{
+				username: 'Jane Doe',
+				password: '123456789',
+				remember: true,
+			}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -49,7 +55,7 @@ const LoginForm = () => {
         rules={[
           { required: true, message: '请输入用户名！' },
           { min: 4, message: '用户名至少 4 个字符！' },
-        ]}
+				]}
       >
         <Input prefix={<UserOutlined />} placeholder="用户名" />
       </Form.Item>

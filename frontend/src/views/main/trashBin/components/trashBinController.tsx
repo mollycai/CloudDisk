@@ -24,10 +24,10 @@ const TrashBinController: React.FC<TrashBinControllerProps> = ({
         {selectedFiles.size > 0 ? `已选 ${selectedFiles.size} 项` : `共 ${allFiles.length} 项`}
       </Checkbox>
       <Space>
-        <Button type="primary" icon={<ReloadOutlined />}>
+				<Button color="primary" variant="filled" icon={<ReloadOutlined />} disabled={ selectedFiles.size === 0}>
           恢复
         </Button>
-        <Button icon={<DeleteOutlined />} danger>
+        <Button color="danger" variant="filled" icon={<DeleteOutlined />} disabled={ selectedFiles.size === 0}>
           永久删除
         </Button>
       </Space>
