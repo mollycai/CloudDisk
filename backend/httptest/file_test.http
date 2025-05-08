@@ -110,3 +110,39 @@ Authorization: {{token}}
 {
 	"path": "tmp/tmp12/"
 }
+
+### 回收站文件
+POST http://127.0.0.1:31866/file/bin HTTP/1.1
+# POST http://103.91.209.53:31866/file/bin HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}} 
+
+{
+}
+
+### 文件移动到回收站
+POST http://127.0.0.1:31866/file/rubbish HTTP/1.1
+# POST http://103.91.209.53:31866/file/rubbish HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}} 
+
+{
+	"fileinfos": [
+		{
+			"srcname": "tmp3/", 
+			"dstname": ""
+		}
+	]
+}
+
+### 文件从回收站恢复
+POST http://127.0.0.1:31866/file/recover HTTP/1.1
+# POST http://103.91.209.53:31866/file/recover HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}} 
+
+{
+	"filenames": [
+		"2.txt"
+	]
+}

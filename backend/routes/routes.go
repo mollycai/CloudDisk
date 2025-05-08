@@ -22,7 +22,11 @@ func SetupRoutes(router *gin.Engine) {
 	{
 		files.POST("/upload", fileController.Upload)
 		files.POST("/files", fileController.Files)
+		files.POST("/all", fileController.AllFiles)
+		files.POST("/bin", fileController.BinFiles)
 		files.POST("/delete", fileController.Delete)
+		files.POST("/rubbish", fileController.MoveIntoBin)
+		files.POST("/recover", fileController.MoveOutOfBin)
 		files.POST("/modify", fileController.ModifyFilename)
 		files.POST("/move", fileController.ModifyFilename)
 		files.POST("/download", fileController.DownloadFile)
