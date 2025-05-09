@@ -3,6 +3,7 @@ import Axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } f
 import { RequestMethods } from './types';
 
 import NProgress from '@/config/nprogress';
+import { store } from '@/redux';
 
 // 默认配置
 const defaultConfig = {
@@ -26,7 +27,20 @@ class RequestHttp {
     RequestHttp.axiosInstance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         NProgress.start();
-        return config;
+        const whiteList = ['/register', '/login'];
+        return whiteList.some((url) => config.url?.endsWith(url))
+          ? config
+          : new Promise((resolve) => {
+              // @TODO 添加token
+              const token: string = localStorage.getItem('token') || store.getState().global.token;
+              if (token) {
+                config.headers = config.headers || {};
+                config.headers['Authorization'] = token;
+                resolve(config);
+              } else {
+                resolve(config);
+              }
+            });
       },
       (error) => {
         return Promise.reject(error);
@@ -42,7 +56,7 @@ class RequestHttp {
         return response;
       },
       async (error: AxiosError) => {
-        NProgress.done();
+				NProgress.done();
         return Promise.reject(error);
       },
     );

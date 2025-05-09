@@ -1,10 +1,4 @@
-import {
-  DashboardOutlined,
-  FolderOpenOutlined,
-  HomeOutlined,
-  ProductOutlined,
-  SmileOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, FolderOpenOutlined, HomeOutlined, ProductOutlined, SmileOutlined } from '@ant-design/icons';
 
 import { MenuItem } from './types';
 
@@ -15,11 +9,6 @@ const menuItems: MenuItem[] = [
     icon: <HomeOutlined />,
   },
   {
-    key: '/dashboard',
-    label: '使用情况',
-    icon: <DashboardOutlined />,
-  },
-  {
     key: '/allFiles',
     label: '所有文件',
     icon: <FolderOpenOutlined />,
@@ -28,7 +17,12 @@ const menuItems: MenuItem[] = [
     key: '/fileCategory',
     label: '文件分类',
     icon: <ProductOutlined />,
-  },
+	},
+	{
+		key: '/trashBin',
+		label: '回收站',
+		icon: <DeleteOutlined />
+	},
   {
     key: '/help',
     label: '帮助',

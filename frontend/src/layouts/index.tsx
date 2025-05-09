@@ -5,6 +5,7 @@ import { Outlet } from 'react-router-dom';
 import LayoutHeader from './Header';
 import Logo from './Logo';
 import LayoutMenus from './Menus';
+import StorageStatus from '@/components/StorageStatus';
 
 const { Sider, Content } = Layout;
 
@@ -15,10 +16,21 @@ const AppLayout: React.FC = () => {
   } = theme.useToken();
 
   return (
-    <Layout className="h-full">
-      <Sider trigger={null} collapsible collapsed={collapsed} theme="dark">
-        <Logo />
-        <LayoutMenus />
+    <Layout className="h-screen">
+      <Sider 
+        trigger={null} 
+        collapsible 
+        collapsed={collapsed} 
+        theme="dark"
+        className="relative"
+      >
+        <div className="overflow-y-auto">
+          <Logo />
+          <LayoutMenus />
+        </div>
+        <div className="fixed bottom-0 left-0 w-[200px]">
+          <StorageStatus />
+        </div>
       </Sider>
       <Layout>
         <LayoutHeader />

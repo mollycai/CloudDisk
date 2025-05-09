@@ -12,7 +12,17 @@ const allFileRouter: Array<RouteObject> = [
       title: '所有文件',
       key: 'allFiles',
       rank: 3,
-    },
+		},
+		children: [
+			{
+        index: true,  // 添加index路由
+        element: lazyLoad(React.lazy(() => import('@/views/main/allFiles/components/fileList'))),
+      },
+			{
+				path: '*',
+        element: lazyLoad(React.lazy(() => import('@/views/main/allFiles/components/fileList'))),
+			}
+		]
   },
 ];
 

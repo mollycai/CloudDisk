@@ -1,6 +1,5 @@
-import { BreadcrumbItem } from '@/redux/types/breadcrumb';
-
-export const SET_BREADCRUMB = 'SET_BREADCRUMB';
+import { BreadcrumbItem } from '@/redux/types/index';
+import { SET_BREADCRUMB } from '@/redux/types/mutation-types';
 
 export const setBreadcrumb = (items: BreadcrumbItem[]) => ({
   type: SET_BREADCRUMB,

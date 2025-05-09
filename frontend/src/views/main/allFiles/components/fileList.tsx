@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
+import { FolderBreadcrumb } from '../types';
 import FileControlBar from './fileControlBar';
-import FileItemGird from './fileItemGird';
-import FileItemList from './fileItemList';
-
-const mockFiles = [
-  { id: 1, fileName: '文档.docx', fileTime: '2023-06-15', size: '2.4 MB' },
-  { id: 2, fileName: '数据.xlsx', fileTime: '2023-06-14', size: '2.4 MB' },
-  { id: 3, fileName: '图片.jpg', fileTime: '2023-06-13', size: '2.4 MB' },
-  { id: 4, fileName: '代码.js', fileTime: '2023-06-12', size: '2.4 MB' },
-];
+import FileItemGird from '@/components/fileItemGird';
+import FileItemList from '@/components/fileItemList';
+import MultiSelectActions from '@/components/MultiSelectAction';
 
 // 表头组件
 const FileListHeader = () => {
@@ -26,23 +22,54 @@ const FileListHeader = () => {
 const FileList: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<Set<number>>(new Set());
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [files, setFiles] = useState(mockFiles);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>(
+    (localStorage.getItem('fileViewMode') || 'grid') as 'list' | 'grid',
+  );
+
+  useEffect(() => {
+    localStorage.setItem('fileViewMode', viewMode);
+  }, [viewMode]);
+
+  const params = useParams();
+  const folderPath = params['*'] || '';
+
+  // 获取context传参
+  const { files, sortFile, updateBreadcrumb } = useOutletContext<{
+    files: any[];
+    sortFile: (order: 'asc' | 'desc') => void;
+		updateBreadcrumb: (newFolder: FolderBreadcrumb) => void;
+  }>();
+
+  // 点击文件夹事件
+  const handleFolderClick = (file: any) => {
+    if (file.type === 'folder') {
+      // 创建新条目
+      const newFolder = {
+        id: file.id,
+        name: file.fileName,
+        path: folderPath ? `/allFiles/${folderPath}/${file.id}` : `/allFiles/${file.id}`,
+			};
+
+      // 获取当前缓存
+      const cachedBreadcrumbs: FolderBreadcrumb[] = JSON.parse(localStorage.getItem('folderBreadCrumb') || '[]');
+
+      // 更新缓存
+      const newBreadcrumbs = [...cachedBreadcrumbs, newFolder];
+      localStorage.setItem('folderBreadCrumb', JSON.stringify(newBreadcrumbs));
+			updateBreadcrumb(newFolder);
+    }
+  };
 
   // 全选/取消全选
   const handleSelectAll = (checked: boolean) => {
-    const newSelected = new Set(checked ? files.map((f) => f.id) : []);
+    const newSelected = new Set(checked ? files.map((file) => file.id) : []);
     setSelectedFiles(newSelected);
   };
 
   // 排序文件
   const handleSortChange = (order: 'asc' | 'desc') => {
     setSortOrder(order);
-    setFiles((prev) =>
-      [...prev].sort((a, b) => {
-        return order === 'asc' ? a.fileTime.localeCompare(b.fileTime) : b.fileTime.localeCompare(a.fileTime);
-      }),
-    );
+    sortFile(order);
   };
 
   // 多选
@@ -58,14 +85,29 @@ const FileList: React.FC = () => {
   };
 
   // 检查是否全选
-  const isAllSelected = selectedFiles.size === files.length && files.length > 0;
+	const isAllSelected = selectedFiles.size === files.length && files.length > 0;
+	
+	// 批量下载
+	const handleMultiDownload = () => {
+		console.log('下载文件');
+	}
+
+	// 批量删除
+	const handleMultiDelete = () => { 
+		console.log('删除文件');
+	}
+
+	// 批量分享
+	const handleMultiShare = () => {
+		console.log('分享文件');
+	}
 
   return (
     <div className="pt-4">
       {/* 控制按钮栏 */}
       <FileControlBar
         selectedFiles={selectedFiles}
-				allFiles={files}
+        allFiles={files}
         onSelectAll={handleSelectAll}
         onSortChange={handleSortChange}
         onViewChange={handleViewChange}
@@ -80,10 +122,10 @@ const FileList: React.FC = () => {
           {files.map((file) => (
             <FileItemGird
               key={file.id}
-              fileName={file.fileName}
-              fileTime={file.fileTime}
+              file={file}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
+              onClick={() => handleFolderClick(file)}
             />
           ))}
         </div>
@@ -96,15 +138,23 @@ const FileList: React.FC = () => {
           {files.map((file) => (
             <FileItemList
               key={file.id}
-              fileName={file.fileName}
-              fileTime={file.fileTime}
-              fileSize={file.size}
+              file={file}
               isSelected={selectedFiles.has(file.id)}
               onSelect={(checked) => handleSelect(file.id, checked)}
+              onClick={() => handleFolderClick(file)}
             />
           ))}
         </div>
-      )}
+			)}
+			
+			{/* 多选时的控制列表 */}
+			<MultiSelectActions
+        selectedFiles={selectedFiles}
+        allFiles={files}
+        onDownload={handleMultiDownload}
+        onDelete={handleMultiDelete}
+        onShare={handleMultiShare}
+      />
     </div>
   );
 };

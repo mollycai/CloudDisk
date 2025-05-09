@@ -1,18 +1,25 @@
-import { getFileIconName } from '@/utils/mapIcon';
-import { MoreOutlined } from '@ant-design/icons';
-import { Checkbox, Dropdown } from 'antd';
+import { Checkbox } from 'antd';
 import { useState } from 'react';
-import { dropdownMenu } from './dropdownMenu';
-import { FileItemProps } from '../types';
+import DropdownMenu from '@/components/DropdownMenu';
+import useFileIcon from '@/hooks/useFileIcon';
 
-// 动态导入所有图标文件
-const iconModules = import.meta.glob('@/assets/fileIcon/*.png', { eager: true });
+// 文件项属性
+interface FileItemProps {
+  // 文件
+  file: any;
+  // 点击事件处理函数
+  onClick?: () => void;
+  // 是否选中状态
+  isSelected?: boolean;
+  // 选中事件
+	onSelect?: (checked: boolean) => void;
+	// 是否是回收站的文件
+	isInRecycleBin?: boolean;
+}
 
-const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, isSelected = false, onSelect }) => {
-  // 获取图标URL
-  const iconName = getFileIconName(fileName);
-  const defaultIcon = (iconModules['/src/assets/fileIcon/others.png'] as { default: string }).default;
-  const iconUrl = (iconModules[`/src/assets/fileIcon/${iconName}`] as { default: string })?.default || defaultIcon;
+const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect, isInRecycleBin = false }) => {
+	// 获取图标URL
+  const iconUrl = useFileIcon(file.fileName);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -40,26 +47,24 @@ const FileItemGird: React.FC<FileItemProps> = ({ fileName, fileTime, onClick, is
       )}
 
       {/* 右上角下拉菜单 - 悬停时显示 */}
-      {isHovered && (
+      {isHovered && !isInRecycleBin && (
         <div className="absolute right-2 top-2 z-10" onClick={(e) => e.stopPropagation()}>
-          <Dropdown menu={{ items: dropdownMenu }} trigger={['click']}>
-            <MoreOutlined className="text-gray-500 hover:text-gray-700" onClick={(e) => e.stopPropagation()} />
-          </Dropdown>
+          <DropdownMenu file={file} />
         </div>
       )}
 
-      {/* 文件图标 - 增大尺寸 */}
+      {/* 文件图标 */}
       <div className="mb-2 flex h-20 w-20 items-center justify-center">
-        <img src={iconUrl} alt={fileName} className="h-full w-full object-contain" />
+        <img src={iconUrl} alt={file.fileName} className="h-full w-full object-contain" />
       </div>
 
       {/* 文件名 */}
       <div className="w-full text-center">
-        <p className="truncate text-sm font-medium text-gray-800">{fileName}</p>
+        <p className="truncate text-sm font-medium text-gray-800">{file.fileName}</p>
       </div>
 
       {/* 文件时间 */}
-      <div className="mt-1 text-xs text-gray-500">{fileTime}</div>
+			{ file.type!== 'folder' && <div className="mt-1 text-xs text-gray-500">{file.fileTime}</div>}
     </div>
   );
 };

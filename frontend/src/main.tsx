@@ -10,6 +10,13 @@ import { persistor, store } from '@/redux';
 import './styles/index.less';
 import './styles/tindwincss.css';
 
+import { setToken } from '@/redux/modules/globals/action';
+
+const token = localStorage.getItem('token');
+if (token) {
+  store.dispatch(setToken(token));
+}
+
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>

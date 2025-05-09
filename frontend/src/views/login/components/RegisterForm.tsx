@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
-import { LockOutlined, MailOutlined, PhoneOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
+import { register } from '@/api/modules/login';
+import { ReqRegisterForm } from '@/api/types';
+import { LockOutlined, MailOutlined, SafetyOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
 
 const RegisterForm = () => {
   const [form] = Form.useForm();
   const [captchaLoading, setCaptchaLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // 模拟发送验证码
   const sendCaptcha = () => {
@@ -16,9 +19,19 @@ const RegisterForm = () => {
     }, 2000);
   };
 
-  const onFinish = (values: any) => {
-    console.log('Received values:', values);
-    message.success('注册成功！');
+  const onFinish = (registerForm: ReqRegisterForm) => {
+    console.log('Received values:', registerForm);
+    setLoading(true);
+    // registerForm.password = md5(registerForm.password);
+    register(registerForm)
+      .then(({ msg }) => {
+        if (msg) {
+          message.success('注册成功！');
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -86,17 +99,6 @@ const RegisterForm = () => {
         <Input prefix={<MailOutlined />} placeholder="邮箱" />
       </Form.Item>
 
-      {/* 手机号 */}
-      <Form.Item
-        name="phone"
-        rules={[
-          { required: true, message: '请输入手机号！' },
-          { pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号！' },
-        ]}
-      >
-        <Input prefix={<PhoneOutlined />} placeholder="手机号" />
-      </Form.Item>
-
       {/* 验证码 */}
       <Form.Item name="captcha" rules={[{ required: true, message: '请输入验证码！' }]}>
         <Input
@@ -112,7 +114,7 @@ const RegisterForm = () => {
 
       {/* 注册按钮 */}
       <Form.Item>
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" loading={loading} block>
           注册
         </Button>
       </Form.Item>

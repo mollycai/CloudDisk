@@ -1,25 +1,50 @@
+import { login } from '@/api/modules/login';
+import { HOME_URL } from '@/config/config';
+import { setToken } from '@/redux/modules/globals/action';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, message } from 'antd';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface ReqLoginForm {
+  username: string;
+	password: string;
+	remember?: boolean;
+}
 
 const LoginForm = () => {
-  const [form] = Form.useForm();
+	const [form] = Form.useForm();
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const onFinish = (values: any) => {
-    console.log('Received values:', values);
-    // 这里可以添加登录逻辑，比如调用 API
-    message.success('登录成功！');
+  const onFinish = (loginForm: ReqLoginForm) => {
+    setLoading(true);
+    login(loginForm)
+			.then((data) => {
+        if (data.data.code === 200) {
+          setToken(data.data.data);
+          navigate(HOME_URL);
+          message.success("登录成功");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-    message.error('请检查输入是否正确！');
+    message.error(`请检查输入是否正确: ${errorInfo}`);
   };
 
   return (
     <Form
       form={form}
       name="login-form"
-      initialValues={{ remember: true }}
+			initialValues={{
+				username: 'Jane Doe',
+				password: '123456789',
+				remember: true,
+			}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -29,7 +54,7 @@ const LoginForm = () => {
         rules={[
           { required: true, message: '请输入用户名！' },
           { min: 4, message: '用户名至少 4 个字符！' },
-        ]}
+				]}
       >
         <Input prefix={<UserOutlined />} placeholder="用户名" />
       </Form.Item>
@@ -52,7 +77,7 @@ const LoginForm = () => {
 
       {/* 登录按钮 */}
       <Form.Item>
-        <Button type="primary" htmlType="submit" block>
+        <Button type="primary" htmlType="submit" loading={loading} block>
           登录
         </Button>
       </Form.Item>
