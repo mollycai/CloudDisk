@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDY3MTIzODYsIm5iZiI6MTc0NjYyNTk4NiwiaWF0IjoxNzQ2NjI1OTg2fQ.m6mN65Q1MXrae2OoWKPl3xvw_8-67xNNNlyzxNuwrlc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6IkphbmUgRG9lIiwiaXNzIjoiY2xvdWRkaXNrLWRlbW8iLCJleHAiOjE3NDY4ODY2MjgsIm5iZiI6MTc0NjgwMDIyOCwiaWF0IjoxNzQ2ODAwMjI4fQ.JP9V3ifvuVPHVGHzdK9xbbYv4Rb0XahPh-Eqc_tmgtY
 
 
 ###
@@ -42,7 +42,7 @@ Content-Type: application/json
 Authorization: {{token}} 
 
 {
-	"path": "tmp/"
+	"path": "新建文件夹/"
 }
 
 ### 删除文件
@@ -98,7 +98,7 @@ Content-Type: application/json
 Authorization: {{token}} 
 
 {
-	"path": "tmp/background2.jpg"
+	"path": "document 2.txt"
 }
 
 ### 新建文件夹

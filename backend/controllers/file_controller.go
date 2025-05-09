@@ -269,10 +269,9 @@ func (controller *FileController) DownloadFile(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Internal error", "code": http.StatusInternalServerError, "data": nil})
 		return
 	}
-	HOST := "103.91.209.53"
-	PORT := "31863"
-	path := u.Scheme + "://" + HOST + ":" + PORT + u.Path + "?" + u.RawQuery
-	c.JSON(http.StatusOK, gin.H{"data": path, "code": http.StatusOK, "msg": ""})
+	HOST := "103.91.209.53:31863"
+	u.Host = HOST
+	c.JSON(http.StatusOK, gin.H{"data": u.String(), "code": http.StatusOK, "msg": ""})
 }
 
 // 新建文件夹
