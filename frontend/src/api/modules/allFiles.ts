@@ -13,26 +13,33 @@ export const deleteFile = (filenames: Array<any>): Promise<any> => {
 
 // 重命名文件
 export const renameFile = (oldFilename: any, newFilename: any): Promise<any> => {
-  return http.request('post', '/api/file/modify', { data: { fileInfo: [{ oldFilename, newFilename }] } });
+  return http.request('post', '/api/file/modify', { data: { fileInfos: [{ srcname: oldFilename, dstname:newFilename }] } });
 };
 
 // 移动文件
 export const moveFile = (oldFilename: any, newFilename: any): Promise<any> => {
-  return http.request('post', '/api/file/move', { data: { fileInfo: [{ oldFilename, newFilename }] } });
+  return http.request('post', '/api/file/move', { data: { fileInfos: [{ srcname: oldFilename, dstname:newFilename }] } });
 };
 
 // 文件上传
-export const uploadFile = (file: any, cb: (current: number) => void): Promise<any> => {
+export const uploadFile = (file: File, folderPath: string, cb: (current: number) => void): Promise<any> => {
+  const formData = new FormData();
+  formData.append('filename', file.name);
+  formData.append('path', folderPath + '/' || '/');
+  formData.append('image', file);
+
   return http.request(
     'post',
     '/api/file/upload',
-    { data: file },
     {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+    },
+    {
       onUploadProgress: (progressEvent) => {
         cb(progressEvent.loaded / progressEvent.total);
-      },
-    },
+			},
+			timeout: 10000000000000
+    }
   );
 };
 
@@ -43,5 +50,5 @@ export const downloadFile = (path: any): Promise<any> => {
 
 // 创建文件夹
 export const createFolder = (path: any): Promise<any> => {
-  return http.request('post', '/api/file/newFolder', { data: { path } });
+  return http.request('post', '/api/file/newfolder', { data: { path } });
 };

@@ -2,203 +2,95 @@ import { defineFakeRoute } from 'vite-plugin-fake-server/client';
 
 export default defineFakeRoute([
   {
-    url: '/file/list',
-    method: 'post',
-    response: (data: any) => {
-      console.log(data.body);
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          // 模拟数据
-          if (data.body === 111) {
-            resolve({
-              code: 200,
-              data: [
-                {
-                  id: 1111,
-                  fileName: '子新建文件夹',
-                  fileTime: '2023-06-12',
-                  size: '2.4 MB',
-                  type: 'folder',
-                  url: '/files/folder/0',
-                },
-                {
-                  id: 5,
-                  fileName: '子文件1.txt',
-                  fileTime: '2023-06-13',
-                  size: '1.2 MB',
-                  type: 'file',
-                  url: '/files/5',
-                },
-                {
-                  id: 6,
-                  fileName: '子文件2.pdf',
-                  fileTime: '2023-06-14',
-                  size: '3.5 MB',
-                  type: 'file',
-                  url: '/files/6',
-                },
-              ],
-            });
-          }
-          if (data.body === 1111) {
-            resolve({
-              code: 200,
-              data: [
-                {
-                  id: 11111,
-                  fileName: '子子新建文件夹',
-                  fileTime: '2023-06-12',
-                },
-                {
-                  id: 7,
-                  fileName: '子子文件1.txt',
-                  fileTime: '2023-06-13',
-                  size: '1.2 MB',
-                  type: 'file',
-                  url: '/files/7',
-                },
-                {
-                  id: 8,
-                  fileName: '子子文件2.pdf',
-                  fileTime: '2023-06-14',
-                  size: '3.5 MB',
-                  type: 'file',
-                  url: '/files/8',
-                },
-              ],
-            });
-          } else {
-            resolve({
-              code: 200,
-              data: [
-                {
-                  id: 111,
-                  fileName: '新建文件夹',
-                  fileTime: '2023-06-12',
-                  size: '2.4 MB',
-                  type: 'folder',
-                  url: '/files/folder/0',
-                },
-                {
-                  id: 112,
-                  fileName: '文档.docx',
-                  fileTime: '2023-06-15',
-                  size: '2.4 MB',
-                  type: 'file',
-                  url: '/files/1',
-                },
-                {
-                  id: 222,
-                  fileName: '数据.xlsx',
-                  fileTime: '2023-06-14',
-                  size: '2.4 MB',
-                  type: 'file',
-                  url: '/files/2',
-                },
-                {
-                  id: 323,
-                  fileName: '图片.jpg',
-                  fileTime: '2023-06-13',
-                  size: '2.4 MB',
-                  type: 'file',
-                  url: '/files/3',
-                },
-                {
-                  id: 413,
-                  fileName: '代码.js',
-                  fileTime: '2023-06-12',
-                  size: '2.4 MB',
-                  type: 'file',
-                  url: '/files/4',
-                },
-              ],
-            });
-          }
-        }, 1000);
-      });
-    },
-  },
-  {
     url: '/file/category',
     method: 'post',
     response: (data: any) => {
       return new Promise((resolve) => {
         setTimeout(() => {
           const categoryIds = data.body; // 接收分类ID数组
-
           // 合并所有选中分类的文件数据
           const allFiles = [];
 
           if (categoryIds.includes('1')) {
             // 音频分类
-            allFiles.push(
-              {
-                id: 101,
-                fileName: '音乐合集.mp3',
-                fileTime: '2023-06-10',
-                size: '128 MB',
-                type: 'file',
-                url: '/files/audio/101',
-              },
-              {
-                id: 102,
-                fileName: '录音文件.wav',
-                fileTime: '2023-06-11',
-                size: '56 MB',
-                type: 'file',
-                url: '/files/audio/102',
-              },
-            );
+            allFiles.push({
+              id: '14e2200b06bd464d273cddc7201d5903',
+              fileName: 'test3.wav',
+              fileTime: '2025-05-10 00:14:58',
+              size: '126.5 KB',
+              type: 'file',
+              url: '新建文件夹/新建文件夹2/test3.wav',
+            });
           }
 
           if (categoryIds.includes('2')) {
             // 视频分类
-            allFiles.push(
-              {
-                id: 201,
-                fileName: '宣传视频.mp4',
-                fileTime: '2023-06-12',
-                size: '2.8 GB',
-                type: 'file',
-                url: '/files/video/201',
-              },
-              {
-                id: 202,
-                fileName: '教程视频.mov',
-                fileTime: '2023-06-13',
-                size: '1.5 GB',
-                type: 'file',
-                url: '/files/video/202',
-              },
-            );
+            allFiles.push({
+              id: 'eed9a1f31853c93515f843f4a6a65c29-2',
+              fileName: '序列 01.mp4',
+              fileTime: '2025-05-10 00:22:45',
+              size: '23.3 MB',
+              type: 'file',
+              url: '新建文件夹/序列 01.mp4',
+            });
           }
 
           if (categoryIds.includes('3')) {
             // 文档分类
             allFiles.push(
               {
-                id: 301,
-                fileName: '项目文档.pdf',
-                fileTime: '2023-06-14',
-                size: '10 MB',
+                id: 'e509c30130768907453a8b62572ebf80-2',
+                fileName: 'HowToCook.pdf',
+                fileTime: '2025-05-09 22:24:08',
+                size: '26.2 MB',
                 type: 'file',
-                url: '/files/doc/301',
+                url: 'HowToCook.pdf',
               },
               {
-                id: 302,
-                fileName: '合同文件.docx',
-                fileTime: '2023-06-15',
-                size: '5 MB',
+                id: '0fe45850cc6199ddb2bfc71c0c13c1cc',
+                fileName: 'ProjectFinalPresentationAndFinalReport.docx',
+                fileTime: '2025-05-09 22:28:49',
+                size: '24.9 KB',
                 type: 'file',
-                url: '/files/doc/302',
+                url: 'ProjectFinalPresentationAndFinalReport.docx',
               },
               {
-                id: 303,
-                fileName: '数据表格.xlsx',
-                fileTime: '2023-06-16',
-                size: '8 MB',
+                id: 'c0b7c647554bae48cf366919b3007529',
+                fileName: 'log 700s.txt',
+                fileTime: '2025-05-10 00:51:45',
+                size: '30.2 KB',
                 type: 'file',
-                url: '/files/doc/303',
+                url: 'log 700s.txt',
+              },
+              {
+                id: '82ff430179e5ce51aad7e16379bdc29d',
+                fileName: '新建 Microsoft Excel 工作表.xlsx',
+                fileTime: '2025-05-09 22:28:05',
+                size: '18.4 KB',
+                type: 'file',
+                url: '新建 Microsoft Excel 工作表.xlsx',
+              },
+            );
+          }
+
+          if (categoryIds.includes('4')) {
+            // 图片分类
+            allFiles.push(
+              {
+                id: '46b106d950faa986e8ba4af512cf7756',
+                fileName: 'background.jpg',
+                fileTime: '2025-05-10 00:10:36',
+                size: '17.9 KB',
+                type: 'file',
+                url: '新建文件夹/background.jpg',
+              },
+              {
+                id: '3f26a8647f01baa74c1b54336d3421f3',
+                fileName: 'wallhaven-r2yw17.png',
+                fileTime: '2025-05-10 00:11:28',
+                size: '9.5 MB',
+                type: 'file',
+                url: '新建文件夹/wallhaven-r2yw17.png',
               },
             );
           }
@@ -221,45 +113,25 @@ export default defineFakeRoute([
             code: 200,
             data: [
               {
-                id: 201,
-                fileName: '音乐合集.mp3',
-                fileTime: '2023-06-10',
-                size: '128 MB',
+                id: '0fe45850cc6199ddb2bfc71c0c13c1cc',
+                fileName: 'ProjectFinalPresentationAndFinalReport.docx',
+                fileTime: '2025-05-09 22:28:49',
+                size: '24.9 KB',
                 type: 'file',
-                url: '/files/audio/201',
-                deletedTime: '2023-06-20'  // 新增删除时间字段
+                url: 'ProjectFinalPresentationAndFinalReport.docx',
               },
               {
-                id: 202,
-                fileName: '录音文件.wav',
-                fileTime: '2023-06-11',
-                size: '56 MB',
+                id: '82ff430179e5ce51aad7e16379bdc29d',
+                fileName: '新建 Microsoft Excel 工作表.xlsx',
+                fileTime: '2025-05-09 22:28:05',
+                size: '18.4 KB',
                 type: 'file',
-                url: '/files/audio/202',
-                deletedTime: '2023-06-21'
+                url: '新建 Microsoft Excel 工作表.xlsx',
               },
-              {
-                id: 203,
-                fileName: '项目文档.pdf',
-                fileTime: '2023-06-12',
-                size: '10 MB',
-                type: 'file',
-                url: '/files/doc/203',
-                deletedTime: '2023-06-22'
-              },
-              {
-                id: 204,
-                fileName: '宣传视频.mp4',
-                fileTime: '2023-06-13',
-                size: '2.8 GB',
-                type: 'file',
-                url: '/files/video/204',
-                deletedTime: '2023-06-23'
-              }
-            ]
+            ],
           });
         }, 500);
       });
-    }
-  }
+    },
+  },
 ]);

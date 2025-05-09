@@ -1,7 +1,8 @@
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { Modal, Upload, message } from 'antd';
+import { Modal, Upload, message, Progress } from 'antd';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { UploadFileModalProps } from '../types';
 
 const { Dragger } = Upload;
@@ -9,6 +10,10 @@ const { Dragger } = Upload;
 const UploadFileModal: React.FC<UploadFileModalProps> = ({ visible, onCancel, onUpload }) => {
   const [fileList, setFileList] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const params = useParams();
+  const folderPath = params['*'] || '';
 
   const handleUpload = async () => {
     if (fileList.length === 0) {
@@ -17,10 +22,13 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ visible, onCancel, on
     }
 
     setIsUploading(true);
-    try {
-      await onUpload(fileList[0]); // 这里只处理第一个文件，如需多文件需调整
+		try {
+      await onUpload(fileList[0], folderPath, (progress) => {
+        setUploadProgress(Math.round(progress * 100));
+      }); // 这里只处理第一个文件，如需多文件需调整
       message.success('文件上传成功');
       setFileList([]);
+      setUploadProgress(0);
       onCancel();
     } catch (error) {
       message.error('文件上传失败');
@@ -29,20 +37,17 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ visible, onCancel, on
     }
   };
 
-  const draggerProps: UploadProps = {
-    multiple: false, // 单文件上传
+  const uploadProps: UploadProps = {
+    name: 'image',
+    multiple: false,
+    showUploadList: false,
     beforeUpload: (file) => {
       setFileList([file]);
-      return false; // 阻止自动上传
+      return false;
     },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
+    customRequest: () => {
+      // 空实现，实际由手动按钮触发
     },
-    fileList: fileList.map((file) => ({
-      uid: file.name,
-      name: file.name,
-      status: 'done',
-    })),
   };
 
   return (
@@ -57,7 +62,7 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ visible, onCancel, on
       width={600}
     >
       <div className="space-y-4">
-        <Dragger {...draggerProps}>
+        <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
@@ -66,11 +71,9 @@ const UploadFileModal: React.FC<UploadFileModalProps> = ({ visible, onCancel, on
         </Dragger>
 
         {fileList.length > 0 && (
-          <div className="rounded border p-2">
-            <p>已选择文件：</p>
-            <p>
-              {fileList[0].name} ({Math.round(fileList[0].size / 1024)} KB)
-            </p>
+          <div className="mt-4">
+            <div>文件名：{fileList[0].name}</div>
+            <Progress percent={uploadProgress} status="active" />
           </div>
         )}
       </div>

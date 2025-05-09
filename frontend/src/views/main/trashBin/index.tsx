@@ -1,5 +1,5 @@
 import { getRecycleBinFiles } from '@/api/modules/trashBin';
-import { Empty } from 'antd';
+import { Empty, Modal, message } from 'antd';
 import { useEffect, useState } from 'react';
 import FileTrashBinList from './components/fileTrashBinList';
 import TrashBinController from './components/trashBinController';
@@ -17,9 +17,9 @@ const TrashBin = () => {
     const newSelected = new Set(selectedFiles);
     checked ? newSelected.add(fileId) : newSelected.delete(fileId);
     setSelectedFiles(newSelected);
-	};
-	
-	// 全选/取消全选
+  };
+
+  // 全选/取消全选
   const handleSelectAll = (checked: boolean) => {
     const newSelected = new Set(checked ? fileList.map((file) => file.id) : []);
     setSelectedFiles(newSelected);
@@ -33,6 +33,25 @@ const TrashBin = () => {
     } catch (error) {
       console.error('获取文件列表失败:', error);
     }
+  };
+
+  const handlePermanentDelete = () => {
+    // 弹窗提示确认
+    Modal.confirm({
+      title: '确认永久删除',
+      content: '确定要永久删除选中的文件吗？此操作不可恢复！',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        // 模拟延时操作
+        setTimeout(() => {
+          // 这里可以添加实际的删除逻辑，例如调用API
+          setFileList((prev) => prev.filter((file) => !selectedFiles.has(file.id)));
+          setSelectedFiles(new Set());
+          message.success('永久删除成功');
+        }, 1000); // 1000ms 延时
+      },
+    });
   };
 
   useEffect(() => {
@@ -60,6 +79,7 @@ const TrashBin = () => {
             allFiles={fileList}
             isAllSelected={isAllSelected}
             onSelectAll={handleSelectAll}
+            handlePermanentDelete={handlePermanentDelete}
           />
           <FileTrashBinList files={fileList} selectedFiles={selectedFiles} onSelect={handleSelect} />
         </>

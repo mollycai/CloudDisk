@@ -6,14 +6,14 @@ export function adaptBackendToFrontend(backendData: Array<any>, currentPath = ''
 		// 获取当前路径的父目录
     const parentPath = currentPath.split('/').slice(0, -1).join('/');
 		const fullPath = parentPath ? `${parentPath}/` : '';
-		
+		const fileName = formatName(item.name, fullPath);
     return {
-      id: formatName(item.name, fullPath) || '', // 使用etag作为唯一标识@TODO 待更改
-      fileName: formatName(item.name, fullPath) || '',
+      id: item.etag || fileName, // 使用etag作为唯一标识@TODO 待更改
+      fileName: fileName || '',
       fileTime: formatDateTime(item.lastModified) || '',
       size: formatFileSize(item.size), // 需要实现格式化函数
       type: item.name.endsWith('/') ? 'folder' : 'file', // 根据contentType判断类型
-      url: `/files/${item.contentType ? 'file' : 'folder'}/${item.etag || ''}`, //@TODO 待更改
+      url: parentPath ? `${parentPath}/${fileName}` : fileName
     };
   });
 }

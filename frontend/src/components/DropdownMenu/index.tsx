@@ -1,9 +1,11 @@
+import { deleteFile, downloadFile } from '@/api/modules/allFiles';
+import { FileContext } from '@/context/fileContext';
 import { MoreOutlined } from '@ant-design/icons';
-import { Dropdown, MenuProps } from 'antd';
-import { useState } from 'react';
-import { DropdownMenuProps } from './types';
+import { Dropdown, MenuProps, message } from 'antd';
+import { useContext, useState } from 'react';
 import FileInfoDialog from './components/fileInfoDialog';
 import RenameDialog from './components/renameDialog';
+import { DropdownMenuProps } from './types';
 
 const DropdownMenu: React.FC<DropdownMenuProps> = ({ file }) => {
   // 展示文件详情
@@ -11,13 +13,30 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ file }) => {
 
   // 展示重命名
   const [renameVisible, setRenameVisible] = useState<boolean>(false);
+  const { refreshFiles } = useContext(FileContext);
+  // 获取父路径
+  const getParentPath = (url: string) => {
+    const lastSlashIndex = url.lastIndexOf('/');
+    if (lastSlashIndex === -1) return ''; // 如果没有斜杠，说明是根目录
+    const parentPath = url.substring(0, lastSlashIndex); // 去掉最后一个斜杠
+    return parentPath === '' ? '' : parentPath; // 如果去掉斜杠后为空字符串，说明是根目录下的文件夹
+  };
 
   const dropdownMenu: MenuProps['items'] = [
     {
       key: 'download',
       label: '下载',
-      onClick: (e) => {
+      onClick: async (e) => {
+        console.log(e, file);
         e.domEvent.stopPropagation();
+        const res = await downloadFile(file.url);
+        console.log(res);
+        const link = document.createElement('a');
+        link.href = res.data.data; // 使用后端返回的URL
+        link.download = file.fileName; // 设置下载文件名
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
     },
     {
@@ -54,8 +73,17 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ file }) => {
       key: 'delete',
       label: '加入回收站',
       danger: true,
-      onClick: (e) => {
+      onClick: async (e) => {
         e.domEvent.stopPropagation();
+        const url = file.type === 'folder' ? `${file.url}/` : file.url;
+        const res = await deleteFile([url]);
+        if (res.data.code === 200) {
+          message.success('加入回收站成功');
+          const parentPath = getParentPath(file.url);
+          refreshFiles(parentPath === '' ? '' : parentPath + '/');
+        } else {
+          message.error(`加入回收站失败：${res.data.msg}`);
+        }
       },
     },
   ];

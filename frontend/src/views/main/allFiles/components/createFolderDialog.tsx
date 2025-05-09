@@ -11,12 +11,13 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ visible, onCancel
       .validateFields()
       .then((values) => {
         onCreate(values.folderName);
-        form.resetFields();
       })
       .catch((info) => {
         console.log('Validate Failed:', info);
-      });
-  };
+      }).finally(() => { 
+				form.resetFields();
+			});
+	};
 
   return (
     <Modal

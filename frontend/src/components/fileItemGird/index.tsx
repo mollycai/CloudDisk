@@ -64,7 +64,7 @@ const FileItemGird: React.FC<FileItemProps> = ({ file, onClick, isSelected = fal
       </div>
 
       {/* 文件时间 */}
-      <div className="mt-1 text-xs text-gray-500">{file.fileTime}</div>
+			{ file.type!== 'folder' && <div className="mt-1 text-xs text-gray-500">{file.fileTime}</div>}
     </div>
   );
 };

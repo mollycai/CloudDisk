@@ -11,7 +11,6 @@ const FileViewer: React.FC<FileViewerProps> = ({ fileUrl }) => {
 
   useEffect(() => {
     const type = fileUrl.split('.').pop();
-    console.log(type);
     setType(type || '');
   }, [fileUrl]);
 

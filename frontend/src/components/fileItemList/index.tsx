@@ -1,7 +1,7 @@
-import { Checkbox } from 'antd';
-import { useState } from 'react';
 import DropdownMenu from '@/components/DropdownMenu';
 import useFileIcon from '@/hooks/useFileIcon';
+import { Checkbox } from 'antd';
+import { useState } from 'react';
 
 // 文件项属性
 interface FileItemProps {
@@ -17,7 +17,7 @@ interface FileItemProps {
 
 const FileItemList: React.FC<FileItemProps> = ({ file, onClick, isSelected = false, onSelect }) => {
   // 获取图标URL
-	const iconUrl = useFileIcon(file.fileName);
+  const iconUrl = useFileIcon(file.fileName);
 
   // 判断是否浮动
   const [isHovered, setIsHovered] = useState(false);
@@ -46,16 +46,16 @@ const FileItemList: React.FC<FileItemProps> = ({ file, onClick, isSelected = fal
       )}
 
       {/* 文件图标和名称 */}
-      <div className="flex min-w-0 flex-1 items-center">
+      <div className="flex min-w-0 flex-1 items-center cursor-pointer">
         <img src={iconUrl} alt={file.fileName} className="mr-3 h-8 w-8 object-contain" />
         <span className="truncate">{file.fileName}</span>
       </div>
 
       {/* 修改时间 */}
-      <div className="w-40 text-sm text-gray-500">{file.fileTime}</div>
+      {file.type !== 'folder' && <div className="w-40 text-sm text-gray-500">{file.fileTime}</div>}
 
       {/* 文件大小 */}
-      <div className="w-24 text-sm text-gray-500">{file.fileSize}</div>
+			{file.type !== 'folder' && <div className="w-24 text-sm text-gray-500">{file.size}</div>}
 
       {/* 操作按钮 */}
       {isHovered ? (

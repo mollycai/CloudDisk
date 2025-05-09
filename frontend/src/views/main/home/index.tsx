@@ -1,5 +1,3 @@
-import './index.less';
-
 const Home = () => {
   return <div>Home</div>;
 };

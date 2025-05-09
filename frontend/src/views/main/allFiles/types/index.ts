@@ -39,7 +39,11 @@ interface CreateFolderModalProps {
 interface UploadFileModalProps {
   visible: boolean;
   onCancel: () => void;
-  onUpload: (file: File) => Promise<void>; // 支持异步上传
+  onUpload: (
+    file: File, 
+    folderPath: string, 
+    progressCallback: (progress: number) => void
+  ) => Promise<boolean>;
 }
 
 // 面包屑导航项属性

@@ -1,31 +1,49 @@
 import useFileIcon from '@/hooks/useFileIcon';
 import useValidateName from '@/hooks/useValidateName';
 import { Form, Input, Modal, message } from 'antd';
-import React from 'react';
+import React, { useContext } from 'react';
 import { RenameModalProps } from '../types';
+import { renameFile } from '@/api/modules/allFiles';
+import { FileContext } from '@/context/fileContext';
 
 const RenameDialog: React.FC<RenameModalProps> = ({ visible, file, setVisible }) => {
   // 获取图标URL
   const iconUrl = useFileIcon(file.fileName);
 
-  const [form] = Form.useForm();
+	const [form] = Form.useForm();
+	
+	const { refreshFiles } = useContext(FileContext);
 
-  const handleUpdateName = (fileName: string) => {
-    // @TODO
-    message.success(`文件 ${fileName} 修改成功`);
-    setVisible(false);
+  const handleUpdateName = async (fileName: string) => {
+    try {
+			// 从原路径获取父目录
+			const lastSlashIndex = file.url.lastIndexOf('/');
+			const parentPath = file.url.substring(0, lastSlashIndex);
+			const newPath = `${parentPath}/${fileName}`;
+	
+			// 调用重命名接口
+			const res = await renameFile('/' + file.url, newPath); // 使用完整路径
+			if (res.data.code === 200) {
+				message.success(`文件 ${fileName} 修改成功`);
+				setVisible(false);
+				refreshFiles(parentPath)
+			}
+		} catch (error) {
+			message.error('修改失败，请重试');
+		}
   };
 
   const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        handleUpdateName(values.folderName);
-        form.resetFields();
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info);
-      });
+		form
+			.validateFields()
+			.then((values) => {
+				handleUpdateName(values.folderName);
+			})
+			.catch((info) => {
+				message.error('Validate Failed:', info);
+			}).finally(() => { 
+				form.resetFields();
+			});
   };
 
   return (

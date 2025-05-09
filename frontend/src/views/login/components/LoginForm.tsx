@@ -33,8 +33,7 @@ const LoginForm = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-    message.error('请检查输入是否正确！');
+    message.error(`请检查输入是否正确: ${errorInfo}`);
   };
 
   return (
